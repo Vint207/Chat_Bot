@@ -1,7 +1,6 @@
-﻿using System.Reflection;
-using static System.Console;
+﻿using System;
 using System.Runtime.CompilerServices;
-using System;
+using static System.Console;
 
 namespace Chat_Bot
 {
@@ -15,44 +14,50 @@ namespace Chat_Bot
 
         public static void SushiBaseChanged(Sushi sushi, User user, [CallerMemberName] string method = "")
         {
-            ForegroundColor = ConsoleColor.Green;
-            switch (method)
+            if (sushi != null)
             {
-                case "AddItem":                   
-                    WriteLine($"--В базу добавлены суши {sushi.Name} - {sushi.Price} р--");
-                    break;
-                case "DeleteItem":
-                    WriteLine($"--Из базы удалены суши {sushi.Name} - {sushi.Price} р--");
-                    break;
-                case "GetItem":
-                    WriteLine($"--Данные о суши {sushi.Name} просмотрены в базе--");
-                    break;
-                case "GetAllItems":
-                    WriteLine($"--Список суши в базе просмотрен--");
-                    break;
-            }
-            ForegroundColor = ConsoleColor.White;
+                ForegroundColor = ConsoleColor.Green;
+                switch (method)
+                {
+                    case "AddItem":
+                        WriteLine($"--В базу добавлены суши {sushi.Name} - {sushi.Price} р--");
+                        break;
+                    case "DeleteItem":
+                        WriteLine($"--Из базы удалены суши {sushi.Name} - {sushi.Price} р--");
+                        break;
+                    case "GetItem":
+                        WriteLine($"--Данные о суши {sushi.Name} просмотрены в базе--");
+                        break;
+                    case "GetAllItems":
+                        WriteLine($"--Список суши в базе просмотрен--");
+                        break;
+                }
+                ForegroundColor = ConsoleColor.White;
+            }          
         }
 
         public static void SushiBaseChangedMessage(Sushi sushi, User user, [CallerMemberName] string method = "")
         {
-            ForegroundColor = ConsoleColor.Blue;
-            switch (method)
+            if (sushi != null)
             {
-                case "AddItem":
-                    WriteLine($"--Добавление суши {sushi.Name} - {sushi.Price} р в базу--");
-                    break;
-                case "DeleteItem":
-                    WriteLine($"--Удаление суши {sushi.Name} - {sushi.Price} р из базы--");
-                    break;
-                case "GetItem":
-                    WriteLine($"--Просмотр суши {sushi.Name} базе--");
-                    break;
-                case "GetAllItems":
-                    WriteLine($"--Просмотр списка суши в базе--");
-                    break;
+                ForegroundColor = ConsoleColor.Blue;
+                switch (method)
+                {
+                    case "AddItem":
+                        WriteLine($"--Добавление суши {sushi.Name} - {sushi.Price} р в базу--");
+                        break;
+                    case "DeleteItem":
+                        WriteLine($"--Удаление суши {sushi.Name} - {sushi.Price} р из базы--");
+                        break;
+                    case "GetItem":
+                        WriteLine($"--Просмотр суши {sushi.Name} базе--");
+                        break;
+                    case "GetAllItems":
+                        WriteLine($"--Просмотр списка суши в базе--");
+                        break;
+                }
+                ForegroundColor = ConsoleColor.White;
             }
-            ForegroundColor = ConsoleColor.White;
         }
 
         public static void UserBaseChanged(User user, [CallerMemberName] string method = "")

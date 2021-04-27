@@ -7,13 +7,13 @@ namespace Chat_Bot
     public class SushiBase : ICRUD<Sushi, User>
     {
 
-        protected internal Dictionary<Sushi, int> _itemList;
+        public Dictionary<Sushi, int> itemList;
         public event BaseChangedEvent<Sushi, User> baseChangedEvent;
         public BaseChangedMessage<Sushi, User> baseChangedMessage;
 
         public SushiBase() 
         {
-            _itemList = new()
+            itemList = new()
             {
                 { new Sushi("Сяке-Маке", 100), 99 },
                 { new Sushi("Филадельфия", 100), 99 },
@@ -27,29 +27,29 @@ namespace Chat_Bot
 
         public void AddItem(Sushi sushi, User user)
         {
-            baseChangedMessage?.Invoke(sushi, user);
-            baseChangedEvent?.Invoke(sushi, user);
+            baseChangedMessage?.Invoke(sushi, user);          
 
-            foreach (var item in _itemList)
+            foreach (var item in itemList)
             {
                 if (item.Key.Name.Equals(sushi.Name))
                 {
-                    _itemList[item.Key]++;
+                    baseChangedEvent?.Invoke(sushi, user);
+                    itemList[item.Key]++;
                     return;
                 }
             }
-            _itemList.Add(sushi, 1);
+            itemList.Add(sushi, 1);
         }
 
         public void DeleteItem(Sushi sushi, User user)
         {
             baseChangedMessage?.Invoke(sushi, user);
 
-            foreach (var item in _itemList)
+            foreach (var item in itemList)
             {
                 if (item.Key.Name.Equals(sushi.Name))
                 {
-                    _itemList[item.Key]--;
+                    itemList[item.Key]--;
                     baseChangedEvent?.Invoke(sushi, user);
                     break;
                 }
@@ -60,7 +60,7 @@ namespace Chat_Bot
         {
             baseChangedMessage?.Invoke(sushi, user);
 
-            foreach (var item in _itemList)
+            foreach (var item in itemList)
             {
                 if (item.Key.Name.Equals(sushi.Name))
                 {
@@ -74,7 +74,7 @@ namespace Chat_Bot
         public void GetAllItems(User user)
         {
             baseChangedMessage?.Invoke(null, user);
-            foreach (var item in _itemList)
+            foreach (var item in itemList)
             {
                 item.Key.GetInfo();
                 Console.Write($" осталось {item.Value} \n");

@@ -42,7 +42,7 @@ namespace Chat_Bot
 
         internal void ChangingPassword()
         {
-            WriteLine("Придумай пароль аккаунта. (6 букв латинского алфавита)");
+            WriteLine("Введи ароль аккаунта. (6 букв латинского алфавита)");
             Validation.TryValidate(this, "Password");
             WriteLine($"Пароль {Password} {Phrase("Prove")}.");
         }
@@ -65,11 +65,13 @@ namespace Chat_Bot
         {
             WriteLine($"На счету {Money} р");
 
-            if (orderBase.GetLastOrder().CanPayOrder(Money))
+            Order order = orderBase.GetLastOrder();
+            if (order.CheckPayment(Money))
             {
                 Money -= bin.Price;
                 return true;
             }
+            WriteLine($"{Name}, на твоем счету недостаточно средств");
             return false;
         }
 

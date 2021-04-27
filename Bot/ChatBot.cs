@@ -1,5 +1,4 @@
 ﻿using static Chat_Bot.Phrases;
-using static Chat_Bot.Validation;
 using static System.Console;
 
 namespace Chat_Bot
@@ -24,6 +23,7 @@ namespace Chat_Bot
         public void Greeting()
         {
             WriteLine($"{Phrase("Greet")}. Звать меня {_botName}. Ты зарегистрирован?");
+
             if (ConsoleWork.Chose()) { Intering(); }
             Registration();
         }
@@ -31,30 +31,28 @@ namespace Chat_Bot
         void Intering()
         {
             User user = new();
-
             user.ChangeProfile();
+            user = _userBase.GetItem(user);
 
-            User tempUser = _userBase.GetItem(user);
-
-            if (tempUser != null)
+            if (user != null)
             {
-                WriteLine($"{tempUser.Name}, ты хочешь изменить данные профиля?)");
-                if (ConsoleWork.Chose()) { ChangingProfile(tempUser); }
+                WriteLine($"{user.Name}, ты хочешь изменить данные профиля?)");
+                if (ConsoleWork.Chose()) { ChangingProfile(user); }
 
-                Chat(tempUser);
-            }           
+                Chat(user);
+            }
 
             Greeting();
         }
 
         void Registration()
-        {           
+        {
             WriteLine($"Давай создадим аккаунт.");
+
             User user = new();
-
             user.ChangeProfile();
-
             _userBase.AddItem(user);
+
             WriteLine($"{Phrase("Praise")}, {user.Name}, теперь ты зарегистрирован в системе.");
 
             Chat(user);
@@ -65,6 +63,7 @@ namespace Chat_Bot
             WriteLine($"Давай изменим данные аккаунта.");
 
             WriteLine($"Ты хочешь изменить имя?");
+
             if (ConsoleWork.Chose())
             {
                 WriteLine($"Введи новое имя. (Используй только буквы)");
@@ -72,21 +71,23 @@ namespace Chat_Bot
             }
 
             WriteLine($"Ты хочешь изменить пароль?");
+
             if (ConsoleWork.Chose())
             {
                 WriteLine("Придумай новый пароль аккаунта. (6 цифр)");
                 user.ChangingPassword();
             }
-
             Chat(user);
         }
 
         void Chat(User user)
         {
             WriteLine($"{user.Name}, хочешь заказать суши?");
+
             if (!ConsoleWork.Chose()) { return; }
 
             WriteLine($"{Phrase("Praise")}, {user.Name}, какие суши ты хочешь?");
+
             _sushiBase.GetAllItems(user);
 
             while (true)
@@ -99,30 +100,27 @@ namespace Chat_Bot
 
                 user.bin.AddItem(sushi, user);
                 _sushiBase.DeleteItem(sushi, user);
+
                 WriteLine();
                 _sushiBase.GetAllItems(user);
+
                 WriteLine();
                 user.bin.GetAllItems(user);
 
                 WriteLine($"{user.Name}, хочешь заказать еще суши?");
+
                 if (!ConsoleWork.Chose()) { break; }
             }
 
-
-            Bin order = new Order();
-            order = (Order)user.bin;
-            user.orderBase.AddItem(order, user);
+            user.orderBase.AddItem(new() { Price = user.bin.Price, itemList = user.bin.itemList }, user);
 
             WriteLine($"{user.Name}, ты готов оплатить заказ?");
 
             if (!ConsoleWork.Chose()) { return; }
 
-            if (!user.PayOrder()) 
-            { 
-                WriteLine($"{user.Name}, на твоем счету недостаточно средств");
-                return;
-            }          
-            
+            if (!user.PayOrder()) { return; }
+
+
         }
     }
 }

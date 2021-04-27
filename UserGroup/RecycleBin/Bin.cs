@@ -7,23 +7,27 @@ namespace Chat_Bot
     {
 
         public double Price { get; set; }
-        //public new event BaseChangedEvent<Sushi, User> baseChangedEvent;
-        //public new BaseChangedMessage<Sushi, User> baseChangedMessage;
 
-        public Bin() { _itemList = new(); }
+        public Bin() { itemList = new(); }
 
-        //public void AddItemToBin(Sushi sushi, User user)
-        //{
-        //    AddItem(sushi, user);
-        //    Price += sushi.Price;
-        //}
+        public void AddItemToBin(Sushi sushi, User user)
+        {
+            AddItem(sushi, user);
+            Price += sushi.Price;
+        }
 
-        //public void DeleteItemFromBin(Sushi sushi, User user)
-        //{
-        //    DeleteItem(sushi, user);
-        //    Price -= sushi.Price;
-        //}
+        public void DeleteItemFromBin(Sushi sushi, User user)
+        {
+            DeleteItem(sushi, user);
+            Price -= sushi.Price;
+        }
 
-        public IEnumerator GetEnumerator() => _itemList.GetEnumerator();
+        public void EmptyBin(User user)
+        {
+            Price = 0d;
+            itemList.Clear();
+        }
+
+        public IEnumerator GetEnumerator() => itemList.GetEnumerator();
     }
 }

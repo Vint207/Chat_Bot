@@ -31,9 +31,9 @@ namespace Chat_Bot
         {
             baseChangedMessage?.Invoke(user);
             baseChangedEvent?.Invoke(user);    
-            User tempUser = _itemList.Find(item => item.Name == user.Name && item.Password == user.Password);
-            if (tempUser != null) { Console.WriteLine("Данный пользователь не зарегистрирован."); }
-            return tempUser;
+            user = _itemList.Find(item => item.Name == user.Name && item.Password == user.Password);
+            if (user == null) { Console.WriteLine("Данный пользователь не зарегистрирован."); }
+            return user;
         }
 
         public void GetAllItems(User user)

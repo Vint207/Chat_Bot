@@ -2,7 +2,7 @@
 
 namespace Chat_Bot
 {
-    class Order : Bin
+    public class Order : Bin
     {
 
         public bool Paid { get; }
@@ -15,9 +15,11 @@ namespace Chat_Bot
         {
             Id = new();
             OpenDate = DateTime.Now;
+            Paid = false;
+            Closed = false;
         }
 
-        internal bool PayOrder(double money)
+        internal bool CanPayOrder(double money)
         {            
             return Price <= money;
         }

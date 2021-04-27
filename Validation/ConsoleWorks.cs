@@ -1,59 +1,49 @@
 ﻿using System;
 using static System.Console;
+using static System.ConsoleKey;
 
 namespace Chat_Bot
 {
-    sealed class ConsoleWork
+    static class ConsoleWork
     {
-        /// <summary>
-        /// Switches options in console and returns it if Enter is pushed
-        /// </summary>
-        /// <returns></returns>        
-        internal static bool Chose()
+
+        public static bool Chose()
         {
-            ConsoleKey key = ConsoleKey.DownArrow;
+            ConsoleKey temp, key = DownArrow;
             CursorVisible = false;
-            Write("Да   \nНет  ");
-            SetCursorPosition(0, GetCursorPosition().Top - 1);
+            bool result = false;
+            SetCursorPosition(0, GetCursorPosition().Top + 1);
             while (true)
             {
-                if (key.Equals(ConsoleKey.UpArrow))
+                if (key == UpArrow)
                 {
-                    if (Overwrite(key, ConsoleKey.DownArrow, true, 2, -1, out key)) { return true; }
+                    SetCursorPosition(0, GetCursorPosition().Top - 1);
+                    ForegroundColor = ConsoleColor.Yellow;
+                    Write($"->Да \n");
+                    ForegroundColor = ConsoleColor.White;
+                    Write("Нет  ");
+                    ForegroundColor = ConsoleColor.Black;
+                    temp = ReadKey().Key;
+                    if (temp == DownArrow) { key = temp; }
+                    if (temp == Enter) { result = true; break; }
                 }
-
-                if (key.Equals(ConsoleKey.DownArrow))
+                if (key == DownArrow)
                 {
-                    if (Overwrite(key, ConsoleKey.UpArrow, false, 1, 1, out key)) { return false; }
+                    SetCursorPosition(0, GetCursorPosition().Top - 1);
+                    ForegroundColor = ConsoleColor.White;
+                    Write("Да   \n");
+                    ForegroundColor = ConsoleColor.Yellow;
+                    Write("->Нет");
+                    ForegroundColor = ConsoleColor.Black;
+                    temp = ReadKey().Key;
+                    if (temp == UpArrow) { key = temp; }
+                    if (temp == Enter) { result = false; break; }
                 }
             }
-        }
-
-        /// <summary>
-        /// Overwrites options with new style
-        /// </summary>
-        /// <returns></returns>
-        internal static bool Overwrite(ConsoleKey key, ConsoleKey nKey, bool write, byte rowOut, int rowIn, out ConsoleKey pKey)
-        {
-            pKey = key;
-            ForegroundColor = ConsoleColor.Yellow;
-            SetCursorPosition(0, GetCursorPosition().Top + rowIn);
-            if (write) { Write("->Да "); } else { Write("->Нет"); }
-
-            ForegroundColor = ConsoleColor.Black;
-            while (pKey != ConsoleKey.Enter && pKey != nKey) { pKey = ReadKey().Key; }
-
+            SetCursorPosition(0, GetCursorPosition().Top + 1);
+            CursorVisible = true;
             ForegroundColor = ConsoleColor.White;
-            if (pKey.Equals(ConsoleKey.Enter))
-            {
-                SetCursorPosition(0, GetCursorPosition().Top + rowOut);
-                CursorVisible = true;
-                return true;
-            }
-
-            SetCursorPosition(0, GetCursorPosition().Top);
-            if (write) { Write("Да   "); } else { Write("Нет  "); }
-            return false;
+            return result;
         }
     }
 }

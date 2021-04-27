@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Chat_Bot
 {
-    class SushiBase : ICRUD<Sushi, User>
+    public class SushiBase : ICRUD<Sushi, User>
     {
 
         protected internal Dictionary<Sushi, int> _itemList;
@@ -23,8 +23,6 @@ namespace Chat_Bot
                 { new Sushi("Z", 100), 99 },
                 { new Sushi("Субару-Импреза", 99999), 99 },
             };
-            baseChangedMessage = EventMethods.SushiBaseChangedMessage;
-            baseChangedEvent += EventMethods.SushiBaseChanged;
         }
 
         public void AddItem(Sushi sushi, User user)

@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 using static Chat_Bot.Phrases;
-using static Chat_Bot.Validation;
 using static System.Console;
 
 namespace Chat_Bot
@@ -11,8 +10,8 @@ namespace Chat_Bot
         internal Bin bin;
         internal OrderBase orderBase;
 
-        public User() 
-        { 
+        public User()
+        {
             bin = new();
             orderBase = new();
             bin.baseChangedMessage = EventMethods.BinBaseChangedMessage;
@@ -21,38 +20,52 @@ namespace Chat_Bot
             orderBase.baseChangedEvent += EventMethods.OrderBaseChanged;
         }
 
-        internal string Name { get; set; }
-        internal string Password { get; set; }
-        internal double Money { get; set; }
+        [Required]
+        [RegularExpression(@"^[a-z\nA-Z\nа-я\nА-Я]{1,12}$", ErrorMessage = "Некорректный формат имени")]
+        public string Name { get; set; }
+
+        [Required]
+        [RegularExpression(@"^[a-z\|0-9]{6}$", ErrorMessage = "Некорректный формат пароля")]
+        public string Password { get; set; }
+
+        [Required]
+        [Range(1, 9999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 9999 р")]
+        public double Money { get; set; }
+
 
         internal void ChangingName()
         {
-            Name = CheckInfo("Name");
+            WriteLine($"Введи свое имя. (Используй только буквы)");
+            Validation.TryValidate(this, "Name");
             WriteLine($"{Phrase("Greet")}, {Name}.");
         }
 
         internal void ChangingPassword()
         {
-            Password = CheckInfo("Password");
+            WriteLine("Придумай пароль аккаунта. (6 букв латинского алфавита)");
+            Validation.TryValidate(this, "Password");
             WriteLine($"Пароль {Password} {Phrase("Prove")}.");
         }
 
         internal void PutMoney(double sum)
-        {       
-            if (sum > 0) 
-            {
-                WriteLine($"На счет {Name} переведено {Money} р");
-                Money += sum;
-                WriteLine($"Баланс {Name} составляет {Money} р");
-            }
-            else { WriteLine($"Нельзя положить отрицательную сумму на счет"); }           
+        {
+            WriteLine($"На счет {Name} переведено {Money} р");
+            Validation.TryValidate(this, "Money");
+            Money += sum;
+            WriteLine($"Баланс {Name} составляет {Money} р");
+        }
+
+        internal void ChangeProfile()
+        {
+            ChangingName();
+            ChangingPassword();
         }
 
         internal bool PayOrder()
         {
             WriteLine($"На счету {Money} р");
 
-            if (orderBase.GetLastOrder().PayOrder(Money))
+            if (orderBase.GetLastOrder().CanPayOrder(Money))
             {
                 Money -= bin.Price;
                 return true;
@@ -60,6 +73,9 @@ namespace Chat_Bot
             return false;
         }
 
-        internal void GetInfo() => WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money}");
+        internal void GetInfo()
+        {
+            WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money}");
+        }
     }
 }

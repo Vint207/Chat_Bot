@@ -11,6 +11,6 @@ namespace Chat_Bot
         internal string Name { get; set; }
         internal double Price { get; set; }
 
-        internal void GetInfo() => Console.Write($"{Name} - {Price} р");
+        internal void GetInfo(int amount) => Console.WriteLine($"- {Name}. Цена: {Price} р. Осталось: {amount} шт");
     }
 }

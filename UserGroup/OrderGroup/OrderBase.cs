@@ -1,4 +1,5 @@
 ﻿using Chat_Bot.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,16 +13,27 @@ namespace Chat_Bot
 
         public OrderBase() { _itemList = new(); }
 
-        public void AddItem(Order order, User user)
+        public bool AddItem(Order order, User user)
         {
-            _itemList.Add(order);
-            baseChangedEvent?.Invoke(order, user);
+            if (order != null)
+            {
+                _itemList.Add(order);
+
+                Console.WriteLine();
+                baseChangedEvent?.Invoke(order, user);
+
+                return true;
+            }
+            return false;
         }
 
-        public void DeleteItem(Order order, User user)
+        public bool DeleteItem(Order order, User user)
         {
             baseChangedEvent?.Invoke(order, user);
+           
             _itemList.Remove(order);
+
+            return true;
         }
 
         public Order GetItem(Order order, User user)
@@ -30,14 +42,20 @@ namespace Chat_Bot
 
             foreach (var item in _itemList)
             {
-                if (item.Id.Equals(order.Id)) { return item; }
+                if (item.Id.Equals(order?.Id)) { return item; }
             }
             return null;
         }
 
         public Order GetLastOrder()
         {
-            return _itemList.Last();
+            Order order = null;
+
+            if (_itemList.Count != 0) { order = _itemList?.Last(); }          
+ 
+            if (order == null){ Console.WriteLine("Список заказов пуст"); }
+
+            return order;
         }
     }
 }

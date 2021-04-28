@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Chat_Bot
 {
-    public class Order 
+    public class Order
     {
         public Dictionary<Sushi, int> itemList;
         public double Price { get; set; }
@@ -25,9 +25,9 @@ namespace Chat_Bot
         {
             Console.WriteLine($"Стоимость заказа {Price} р");
 
-            if (Price <= money)              
+            if (money > 0 & Price <= money)
             {
-                Console.WriteLine($"Заказ оплачен р");
+                Console.WriteLine($"Заказ оплачен");
                 return true;
             }
             return false;
@@ -35,8 +35,21 @@ namespace Chat_Bot
 
         public void CloseOrder()
         {
+            Console.WriteLine();
             Closed = true;
             CloseDate = DateTime.Now;
+        }
+
+        public void GetInfo()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Твой последний заказ:");
+
+            foreach (var sushi in itemList) { sushi.Key.GetInfo(sushi.Value); }
+
+            Console.WriteLine();
+            Console.WriteLine($"- Стоимость заказа: {Price} р");
+            Console.WriteLine();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using static Chat_Bot.Phrases;
+﻿using System;
+using System.Text.RegularExpressions;
+using static Chat_Bot.Phrases;
 using static System.Console;
 
 namespace Chat_Bot
@@ -20,15 +22,27 @@ namespace Chat_Bot
             _sushiBase.baseChangedEvent += EventMethods.SushiBaseChanged;
         }
 
-        public void Greeting()
+        public void MainChat()
         {
-            WriteLine($"{Phrase("Greet")}. Звать меня {_botName}. Ты зарегистрирован?");
+            User user = new();
 
-            if (ConsoleWork.Chose()) { Intering(); }
-            Registration();
+            while (true)
+            {
+                WriteLine();
+                WriteLine($"--{Phrase("Greet")}. Звать меня {_botName}. Ты зарегистрирован?--");
+
+                if (ConsoleWork.Chose()) { user = Intering(); }
+                else { user = Registration(); }
+
+                if (user != null)
+                {
+                    if (FindOrder(user)) { PayOrder(user); }
+                    else if (BuildOrder(user)) { PayOrder(user); }
+                }
+            }
         }
 
-        void Intering()
+        User Intering()
         {
             User user = new();
             user.ChangeProfile();
@@ -36,91 +50,98 @@ namespace Chat_Bot
 
             if (user != null)
             {
-                WriteLine($"{user.Name}, ты хочешь изменить данные профиля?)");
+                WriteLine();
+                WriteLine($"{user.Name}, ты хочешь изменить данные профиля?");
+
                 if (ConsoleWork.Chose()) { ChangingProfile(user); }
-
-                Chat(user);
             }
-
-            Greeting();
+            return user;
         }
 
-        void Registration()
+        User Registration()
         {
+            WriteLine();
             WriteLine($"Давай создадим аккаунт.");
 
             User user = new();
             user.ChangeProfile();
             _userBase.AddItem(user);
 
+            WriteLine();
             WriteLine($"{Phrase("Praise")}, {user.Name}, теперь ты зарегистрирован в системе.");
 
-            Chat(user);
+            return user;
         }
 
         void ChangingProfile(User user)
         {
-            WriteLine($"Давай изменим данные аккаунта.");
-
+            WriteLine();
             WriteLine($"Ты хочешь изменить имя?");
 
-            if (ConsoleWork.Chose())
-            {
-                WriteLine($"Введи новое имя. (Используй только буквы)");
-                user.ChangingName();
-            }
+            if (ConsoleWork.Chose()) { user.ChangingName(); }
 
+            WriteLine();
             WriteLine($"Ты хочешь изменить пароль?");
 
-            if (ConsoleWork.Chose())
-            {
-                WriteLine("Придумай новый пароль аккаунта. (6 цифр)");
-                user.ChangingPassword();
-            }
-            Chat(user);
+            if (ConsoleWork.Chose()) { user.ChangingPassword(); }
+
+            return;
         }
 
-        void Chat(User user)
+        bool BuildOrder(User user)
         {
+            WriteLine();
             WriteLine($"{user.Name}, хочешь заказать суши?");
 
-            if (!ConsoleWork.Chose()) { return; }
+            if (!ConsoleWork.Chose()) { return false; }
 
+            WriteLine();
             WriteLine($"{Phrase("Praise")}, {user.Name}, какие суши ты хочешь?");
-
-            _sushiBase.GetAllItems(user);
 
             while (true)
             {
-                WriteLine($"{user.Name}, Введи суши для добавления в корзину");
+                WriteLine();
+                WriteLine($"{user.Name}, Выбери суши для добавления в корзину");
 
-                Sushi sushi = _sushiBase.GetItem(new(ReadLine()), user);
+                WriteLine();
+                Sushi sushi = _sushiBase.GetItem(new(ConsoleWork.Chose(_sushiBase.GetListItems(user))), user);
 
-                if (sushi == null) { WriteLine("Таких суши нет, попробуй другие"); }
-
-                user.bin.AddItem(sushi, user);
+                user.bin.AddItemToBin(sushi, user);
                 _sushiBase.DeleteItem(sushi, user);
 
                 WriteLine();
-                _sushiBase.GetAllItems(user);
+                user.bin.GetAllItemsFromBin(user);
 
                 WriteLine();
-                user.bin.GetAllItems(user);
-
                 WriteLine($"{user.Name}, хочешь заказать еще суши?");
 
                 if (!ConsoleWork.Chose()) { break; }
             }
-
+            WriteLine();
             user.orderBase.AddItem(new() { Price = user.bin.Price, itemList = user.bin.itemList }, user);
 
+            return true;
+        }
+
+        bool FindOrder(User user)
+        {
+            Order order = user.orderBase.GetLastOrder();
+
+            if (order != null && !order.Paid)
+            {
+                order.GetInfo();
+                return true;
+            }
+            return false;
+        }
+
+        void PayOrder(User user)
+        {         
             WriteLine($"{user.Name}, ты готов оплатить заказ?");
 
             if (!ConsoleWork.Chose()) { return; }
 
             if (!user.PayOrder()) { return; }
-
-
         }
     }
 }

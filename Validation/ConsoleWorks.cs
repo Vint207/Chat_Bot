@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using static System.Console;
 using static System.ConsoleKey;
 
@@ -7,43 +9,68 @@ namespace Chat_Bot
     static class ConsoleWork
     {
 
-        public static bool Chose()
+        static int _position;
+        static List<string> _variants;
+        static List<string> _yesNo = new() { "Да", "Нет" };
+
+        public static string Chose(List<string> variants)
         {
-            ConsoleKey temp, key = DownArrow;
+            _variants = variants;
+            ConsoleKey key = DownArrow;
             CursorVisible = false;
-            bool result = false;
-            SetCursorPosition(0, GetCursorPosition().Top + 1);
+            SetCursorPosition(0, GetCursorPosition().Top + _variants.Count);
+            _position = 0;
+
             while (true)
             {
-                if (key == UpArrow)
+                if (key == DownArrow && _position < _variants.Count - 1)
                 {
-                    SetCursorPosition(0, GetCursorPosition().Top - 1);
-                    ForegroundColor = ConsoleColor.Yellow;
-                    Write($"->Да \n");
-                    ForegroundColor = ConsoleColor.White;
-                    Write("Нет  ");
-                    ForegroundColor = ConsoleColor.Black;
-                    temp = ReadKey().Key;
-                    if (temp == DownArrow) { key = temp; }
-                    if (temp == Enter) { result = true; break; }
+                    _position++;
+                    Paint();
                 }
-                if (key == DownArrow)
+                if (key == UpArrow && _position > 0)
                 {
-                    SetCursorPosition(0, GetCursorPosition().Top - 1);
-                    ForegroundColor = ConsoleColor.White;
-                    Write("Да   \n");
-                    ForegroundColor = ConsoleColor.Yellow;
-                    Write("->Нет");
-                    ForegroundColor = ConsoleColor.Black;
-                    temp = ReadKey().Key;
-                    if (temp == UpArrow) { key = temp; }
-                    if (temp == Enter) { result = false; break; }
+                    _position--;
+                    Paint();
                 }
+                if (key == Enter)
+                {
+                    CursorVisible = true;
+                    ForegroundColor = ConsoleColor.White;
+
+                    MatchCollection matches = Regex.Matches(_variants[_position], @"(((\w*\-\w*)|(\w){1,40}))");
+
+                    return matches[0].Value;
+                }
+                key = ReadKey().Key;
             }
-            SetCursorPosition(0, GetCursorPosition().Top + 1);
-            CursorVisible = true;
-            ForegroundColor = ConsoleColor.White;
-            return result;
+        }
+
+        public static bool Chose()
+        {
+            return Chose(_yesNo) switch
+            {
+                "Да" => true,
+                "Нет" => false,
+                _ => false
+            };
+        }
+
+        static void Paint()
+        {
+            SetCursorPosition(0, GetCursorPosition().Top - _variants.Count);
+            for (int i = 0; i < _variants.Count; i++)
+            {
+                if (i == _position)
+                {
+                    ForegroundColor = ConsoleColor.Yellow;
+                    WriteLine($"->{_variants[i]}");
+                    continue;
+                }
+                ForegroundColor = ConsoleColor.White;
+                WriteLine($"{_variants[i]}  ");
+            }
+            ForegroundColor = ConsoleColor.Black;
         }
     }
 }

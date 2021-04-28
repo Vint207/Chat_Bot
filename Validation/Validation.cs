@@ -27,7 +27,7 @@ namespace Chat_Bot
                     if (typeCode == TypeCode.Boolean) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToBoolean(ReadLine()));
                     if (typeCode == TypeCode.Byte) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToByte(ReadLine()));
                 }
-                catch (Exception ex) { WriteLine(ex.Message); }
+                catch (Exception ex) { WriteLine(ex.Message); break; }
 
                 var propertyValue = obj.GetType().GetProperty(propertyName).GetValue(obj);
                 var results = new List<ValidationResult>();
@@ -35,8 +35,7 @@ namespace Chat_Bot
 
                 if (Validator.TryValidateProperty(propertyValue, context, results)) { break; }
 
-                foreach (var item in results)
-                { WriteLine(item.ErrorMessage); }
+                foreach (var item in results) { WriteLine(item.ErrorMessage); }
             }
         }
     }

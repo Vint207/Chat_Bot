@@ -35,37 +35,48 @@ namespace Chat_Bot
 
         internal void ChangingName()
         {
-            WriteLine($"Введи свое имя. (Используй только буквы)");
+            WriteLine($"Введи имя. (Используй только буквы)");
+
             Validation.TryValidate(this, "Name");
+
             WriteLine($"{Phrase("Greet")}, {Name}.");
         }
 
         internal void ChangingPassword()
         {
-            WriteLine("Введи ароль аккаунта. (6 букв латинского алфавита)");
+            WriteLine("Введи пароль аккаунта. (6 букв латинского алфавита или цифры)");
+
             Validation.TryValidate(this, "Password");
+
             WriteLine($"Пароль {Password} {Phrase("Prove")}.");
         }
 
         internal void PutMoney(double sum)
         {
             WriteLine($"На счет {Name} переведено {Money} р");
+
             Validation.TryValidate(this, "Money");
             Money += sum;
+
             WriteLine($"Баланс {Name} составляет {Money} р");
         }
 
         internal void ChangeProfile()
         {
+            WriteLine();
             ChangingName();
+            WriteLine();
             ChangingPassword();
+            WriteLine();
         }
 
         internal bool PayOrder()
         {
+            WriteLine();
             WriteLine($"На счету {Money} р");
 
             Order order = orderBase.GetLastOrder();
+
             if (order.CheckPayment(Money))
             {
                 Money -= bin.Price;

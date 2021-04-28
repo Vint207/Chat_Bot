@@ -14,7 +14,7 @@ namespace Chat_Bot
 
         public static void SushiBaseChanged(Sushi sushi, User user, [CallerMemberName] string method = "")
         {
-            if (sushi != null)
+            if (sushi != null || method.Equals("GetAllItems"))
             {
                 ForegroundColor = ConsoleColor.Green;
                 switch (method)
@@ -38,7 +38,7 @@ namespace Chat_Bot
 
         public static void SushiBaseChangedMessage(Sushi sushi, User user, [CallerMemberName] string method = "")
         {
-            if (sushi != null)
+            if (sushi != null || method.Equals("GetAllItems"))
             {
                 ForegroundColor = ConsoleColor.Blue;
                 switch (method)
@@ -104,44 +104,50 @@ namespace Chat_Bot
 
         public static void BinBaseChanged(Sushi sushi, User user, [CallerMemberName] string method = "")
         {
-            ForegroundColor = ConsoleColor.Green;
-            switch (method)
+            if (sushi != null || method.Equals("GetAllItems"))
             {
-                case "AddItem":
-                    WriteLine($"--В корзину пользователя {user.Name} добавлены суши {sushi.Name} - {sushi.Price} р--");
-                    break;
-                case "DeleteItem":
-                    WriteLine($"--Из корзины пользователя {user.Name} удалены суши {sushi.Name} - {sushi.Price} р--");
-                    break;
-                case "GetItem":
-                    WriteLine($"--Суши {sushi.Name} просмотрены в корзине пользователя {user.Name}--");
-                    break;
-                case "GetAllItems":
-                    WriteLine($"--Список суши в корзине пользователя {user.Name} просмотрен--");
-                    break;
+                ForegroundColor = ConsoleColor.Green;
+                switch (method)
+                {
+                    case "AddItem":
+                        WriteLine($"--В корзину пользователя {user.Name} добавлены суши {sushi.Name} - {sushi.Price} р--");
+                        break;
+                    case "DeleteItem":
+                        WriteLine($"--Из корзины пользователя {user.Name} удалены суши {sushi.Name} - {sushi.Price} р--");
+                        break;
+                    case "GetItem":
+                        WriteLine($"--Суши {sushi.Name} просмотрены в корзине пользователя {user.Name}--");
+                        break;
+                    case "GetAllItems":
+                        WriteLine($"--Список суши в корзине пользователя {user.Name} просмотрен--");
+                        break;
+                }
+                ForegroundColor = ConsoleColor.White;
             }
-            ForegroundColor = ConsoleColor.White;
         }
 
         public static void BinBaseChangedMessage(Sushi sushi, User user, [CallerMemberName] string method = "")
         {
-            ForegroundColor = ConsoleColor.Blue;
-            switch (method)
+            if (sushi != null || method.Equals("GetAllItems"))
             {
-                case "AddItem":
-                    WriteLine($"--Добавление суши {sushi.Name} - {sushi.Price} р в корзину пользователя {user.Name}--");
-                    break;
-                case "DeleteItem":
-                    WriteLine($"--Из корзины пользователя {user.Name} удалены суши {sushi.Name} - {sushi.Price} р--");
-                    break;
-                case "GetItem":
-                    WriteLine($"--Данные о суши {sushi.Name} просмотрены в корзине пользователя {user.Name}--");
-                    break;
-                case "GetAllItems":
-                    WriteLine($"--Список суши в корзине пользователя {user.Name}--");
-                    break;
+                ForegroundColor = ConsoleColor.Blue;
+                switch (method)
+                {
+                    case "AddItem":
+                        WriteLine($"--Добавление суши {sushi.Name} - {sushi.Price} р в корзину пользователя {user.Name}--");
+                        break;
+                    case "DeleteItem":
+                        WriteLine($"--Из корзины пользователя {user.Name} удалены суши {sushi.Name} - {sushi.Price} р--");
+                        break;
+                    case "GetItem":
+                        WriteLine($"--Данные о суши {sushi.Name} просмотрены в корзине пользователя {user.Name}--");
+                        break;
+                    case "GetAllItems":
+                        WriteLine($"--Список суши в корзине пользователя {user.Name}--");
+                        break;
+                }
+                ForegroundColor = ConsoleColor.White;
             }
-            ForegroundColor = ConsoleColor.White;
         }
 
         public static void OrderBaseChanged(Order order, User user, [CallerMemberName] string method = "")
@@ -150,7 +156,7 @@ namespace Chat_Bot
             switch (method)
             {
                 case "AddItem":
-                    WriteLine($"--Пользователь {user.Name} открыл заказ в {order.OpenDate}--");
+                    WriteLine($"--Пользователь {user.Name} открыл заказ {order.OpenDate.Date} в {order.OpenDate.TimeOfDay}--");
                     break;
             }
             ForegroundColor = ConsoleColor.White;
@@ -162,7 +168,7 @@ namespace Chat_Bot
             switch (method)
             {
                 case "AddItem":
-                    WriteLine($"--Пользователь {user.Name} открывает заказ в {order.OpenDate}--");
+                    WriteLine($"--Пользователь {user.Name} открывает заказ {order.OpenDate} в {order.OpenDate.TimeOfDay}--");
                     break;
             }
             ForegroundColor = ConsoleColor.White;

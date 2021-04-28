@@ -11,36 +11,60 @@ namespace Chat_Bot
         public event BaseChangedEvent<User> baseChangedEvent;
         public BaseChangedMessage<User> baseChangedMessage;
 
-        public UserBase()  { _itemList = new(); }
+        public UserBase() { _itemList = new(); }
 
-        public void AddItem(User user)
+        public bool AddItem(User user)
         {
             baseChangedMessage?.Invoke(user);
-            _itemList.Add(user);
-            baseChangedEvent?.Invoke(user);
+            if (user != null)
+            {
+                _itemList.Add(user);
+                baseChangedEvent?.Invoke(user);
+                return true;
+            }
+            return false;
         }
 
-        public void DeleteItem(User user)
+        public bool DeleteItem(User user)
         {
             baseChangedMessage?.Invoke(user);
-            _itemList.Remove(_itemList.Find(item => item.Name == user.Name && item.Password == user.Password));
-            baseChangedEvent?.Invoke(user);
+
+            user = _itemList.Find(item => item.Name == user.Name && item.Password == user.Password);
+
+            if (user != null) 
+            {
+                _itemList.Remove(user);         
+                baseChangedEvent?.Invoke(user);
+                return true;
+            }       
+            return false;
         }
 
         public User GetItem(User user)
         {
-            baseChangedMessage?.Invoke(user);
-            baseChangedEvent?.Invoke(user);    
+            baseChangedMessage?.Invoke(user);         
+
             user = _itemList.Find(item => item.Name == user.Name && item.Password == user.Password);
-            if (user == null) { Console.WriteLine("Данный пользователь не зарегистрирован."); }
+
+            if (user != null) 
+            { 
+                user.GetInfo();
+                baseChangedEvent?.Invoke(user);
+                return user;
+            }
+            Console.WriteLine("Данный пользователь не зарегистрирован.");
             return user;
         }
 
-        public void GetAllItems(User user)
+        public bool GetAllItems(User user)
         {
             baseChangedMessage?.Invoke(user);
+
             foreach (var item in _itemList) { item.GetInfo(); }
+
             baseChangedEvent?.Invoke(user);
+
+            return true;
         }
     }
 }

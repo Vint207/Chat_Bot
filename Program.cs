@@ -1,4 +1,5 @@
-﻿using static System.Console;
+﻿using System.Collections.Generic;
+using static System.Console;
 
 namespace Chat_Bot
 {
@@ -11,7 +12,7 @@ namespace Chat_Bot
 
             while (true)
             {
-                new ChatBot(users, sushi).Greeting();
+                new ChatBot(users, sushi).MainChat();
                 ReadLine();
             }
         }

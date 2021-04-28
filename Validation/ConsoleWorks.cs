@@ -19,7 +19,7 @@ namespace Chat_Bot
             ConsoleKey key = DownArrow;
             CursorVisible = false;
             SetCursorPosition(0, GetCursorPosition().Top + _variants.Count);
-            _position = 0;
+            _position = -1;
 
             while (true)
             {
@@ -38,7 +38,7 @@ namespace Chat_Bot
                     CursorVisible = true;
                     ForegroundColor = ConsoleColor.White;
 
-                    MatchCollection matches = Regex.Matches(_variants[_position], @"(((\w*\-\w*)|(\w){1,40}))");
+                    MatchCollection matches = Regex.Matches(_variants[_position], @"(((\w*\-\w*)|(\w){1,40}))");                  
 
                     return matches[0].Value;
                 }

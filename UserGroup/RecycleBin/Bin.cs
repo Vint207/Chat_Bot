@@ -26,11 +26,14 @@ namespace Chat_Bot
 
         public void GetAllItemsFromBin(User user)
         {
+            Console.Clear();
+
             GetAllItems(user);
 
             Console.WriteLine();
             Console.WriteLine($"- Стоимость товаров в корзине: {Price} р");
-            Console.WriteLine();
+
+            Console.Read();
         }
 
         public void EmptyBin(User user)

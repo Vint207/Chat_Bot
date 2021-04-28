@@ -49,11 +49,15 @@ namespace Chat_Bot
 
         public Order GetLastOrder()
         {
+            Console.Clear();
+
             Order order = null;
 
             if (_itemList.Count != 0) { order = _itemList?.Last(); }          
  
             if (order == null){ Console.WriteLine("Список заказов пуст"); }
+
+            Console.Read();
 
             return order;
         }

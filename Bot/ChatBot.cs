@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 using static Chat_Bot.Phrases;
 using static System.Console;
 
@@ -9,35 +8,35 @@ namespace Chat_Bot
     {
         UserBase _userBase;
         SushiBase _sushiBase;
-        string _botName;
+        //string _botName;
 
         public ChatBot(UserBase userBase, SushiBase sushiBase)
         {
             _userBase = userBase;
             _sushiBase = sushiBase;
-            _botName = "Гробик";
+            //_botName = "Гробик";
             _userBase.baseChangedMessage = EventMethods.UserBaseChangedMessage;
             _userBase.baseChangedEvent += EventMethods.UserBaseChanged;
             _sushiBase.baseChangedMessage = EventMethods.SushiBaseChangedMessage;
             _sushiBase.baseChangedEvent += EventMethods.SushiBaseChanged;
         }
 
-        public void MainChat()
+        public void MainMenu()
         {
-            User user = new();
-
             while (true)
             {
-                WriteLine();
-                WriteLine($"--{Phrase("Greet")}. Звать меня {_botName}. Ты зарегистрирован?--");
+                Clear();
 
-                if (ConsoleWork.Chose()) { user = Intering(); }
-                else { user = Registration(); }
-
-                if (user != null)
+                switch (ConsoleWork.Chose(new List<string>() { "Регистрация", "Вход" }))
                 {
-                    if (FindOrder(user)) { PayOrder(user); }
-                    else if (BuildOrder(user)) { PayOrder(user); }
+                    case "Регистрация":
+                        AccauntMenu(Registration());
+                        break;
+
+                    case "Вход":
+                        User user = Intering();
+                        if (user != null) { AccauntMenu(user); }
+                        break;
                 }
             }
         }
@@ -45,26 +44,20 @@ namespace Chat_Bot
         User Intering()
         {
             User user = new();
-            user.ChangeProfile();
+            user.CreateProfile();
             user = _userBase.GetItem(user);
 
-            if (user != null)
-            {
-                WriteLine();
-                WriteLine($"{user.Name}, ты хочешь изменить данные профиля?");
+            Read();
 
-                if (ConsoleWork.Chose()) { ChangingProfile(user); }
-            }
             return user;
         }
 
         User Registration()
         {
-            WriteLine();
             WriteLine($"Давай создадим аккаунт.");
 
             User user = new();
-            user.ChangeProfile();
+            user.CreateProfile();
             _userBase.AddItem(user);
 
             WriteLine();
@@ -73,33 +66,12 @@ namespace Chat_Bot
             return user;
         }
 
-        void ChangingProfile(User user)
+        bool BuildBin(User user)
         {
-            WriteLine();
-            WriteLine($"Ты хочешь изменить имя?");
-
-            if (ConsoleWork.Chose()) { user.ChangingName(); }
-
-            WriteLine();
-            WriteLine($"Ты хочешь изменить пароль?");
-
-            if (ConsoleWork.Chose()) { user.ChangingPassword(); }
-
-            return;
-        }
-
-        bool BuildOrder(User user)
-        {
-            WriteLine();
-            WriteLine($"{user.Name}, хочешь заказать суши?");
-
-            if (!ConsoleWork.Chose()) { return false; }
-
-            WriteLine();
-            WriteLine($"{Phrase("Praise")}, {user.Name}, какие суши ты хочешь?");
-
             while (true)
             {
+                Clear();
+
                 WriteLine();
                 WriteLine($"{user.Name}, Выбери суши для добавления в корзину");
 
@@ -118,30 +90,100 @@ namespace Chat_Bot
                 if (!ConsoleWork.Chose()) { break; }
             }
             WriteLine();
-            user.orderBase.AddItem(new() { Price = user.bin.Price, itemList = user.bin.itemList }, user);
 
             return true;
         }
 
-        bool FindOrder(User user)
+        void AccauntMenu(User user)
         {
-            Order order = user.orderBase.GetLastOrder();
-
-            if (order != null && !order.Paid)
+            while (true)
             {
-                order.GetInfo();
-                return true;
+                Clear();
+
+                switch (ConsoleWork.Chose(new List<string>() { "Просмотреть-аккаунт", "Настроить-аккаунт", "Пополнить-счет", "Меню-суши", "Меню-корзины", "Меню-заказа", "Выйти" }))
+                {
+                    case "Просмотреть-аккаунт":
+                        user.GetInfo();
+                        Read();
+                        break;
+
+                    case "Настроить-аккаунт":
+                        user.ChangeProfile();
+                        break;
+
+                    case "Пополнить-счет":
+                        user.PutMoney();
+                        break;
+
+                    case "Меню-суши":
+                        BuildBin(user);
+                        break;
+
+                    case "Меню-корзины":
+                        BinMenu(user);
+                        break;
+
+                    case "Меню-заказа":
+                        OrderMenu(user);
+                        break;
+
+                    case "Выйти":
+                        return;
+                }
             }
-            return false;
         }
 
-        void PayOrder(User user)
-        {         
-            WriteLine($"{user.Name}, ты готов оплатить заказ?");
+        void BinMenu(User user)
+        {
+            while (true)
+            {
+                Clear();
 
-            if (!ConsoleWork.Chose()) { return; }
+                switch (ConsoleWork.Chose(new List<string>() { "Просмотеть-корзину", "Добавить-суши", "Оформить-заказ", "Назад" }))
+                {
+                    case "Просмотеть-корзину":
+                        user.bin.GetAllItems(user);
+                        Read();
+                        break;
 
-            if (!user.PayOrder()) { return; }
+                    case "Добавить-суши":
+                        BuildBin(user);
+                        break;
+
+                    case "Оформить-заказ":
+                        OrderMenu(user);
+                        break;
+
+                    case "Назад":
+                        return;
+                }
+            }
+        }
+
+        void OrderMenu(User user)
+        {
+
+            user.orderBase.AddItem(new() { Price = user.bin.Price, itemList = user.bin.itemList }, user);
+
+            while (true)
+            {
+                Clear();
+
+                switch (ConsoleWork.Chose(new List<string>() { "Просмотреть-заказ", "Оплатить-заказ", "Назад" }))
+                {
+                    case "Просмотреть-заказ":
+                        user.orderBase.GetLastOrder().GetInfo();
+                        Read();
+                        break;
+
+                    case "Оплатить-заказ":
+                        user.PayOrder();
+                        break;
+
+                    case "Назад":
+                        return;
+                }
+            }
         }
     }
 }

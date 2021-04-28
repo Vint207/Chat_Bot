@@ -23,11 +23,14 @@ namespace Chat_Bot
 
         internal bool CheckPayment(double money)
         {
+            Console.Clear();
+
             Console.WriteLine($"Стоимость заказа {Price} р");
 
             if (money > 0 & Price <= money)
             {
                 Console.WriteLine($"Заказ оплачен");
+                Console.Read();
                 return true;
             }
             return false;
@@ -42,14 +45,15 @@ namespace Chat_Bot
 
         public void GetInfo()
         {
-            Console.WriteLine();
+
+            Console.Clear();
             Console.WriteLine("Твой последний заказ:");
 
             foreach (var sushi in itemList) { sushi.Key.GetInfo(sushi.Value); }
 
             Console.WriteLine();
             Console.WriteLine($"- Стоимость заказа: {Price} р");
-            Console.WriteLine();
+            Console.Read();
         }
     }
 }

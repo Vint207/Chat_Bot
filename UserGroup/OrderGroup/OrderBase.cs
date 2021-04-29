@@ -30,7 +30,7 @@ namespace Chat_Bot
         public bool DeleteItem(Order order, User user)
         {
             baseChangedEvent?.Invoke(order, user);
-           
+
             _itemList.Remove(order);
 
             return true;
@@ -47,19 +47,34 @@ namespace Chat_Bot
             return null;
         }
 
+        public void AddOrder(User user)
+        {
+            Console.Clear();
+
+            if (user.bin.itemList.Count > 0)
+            {
+                AddItem(new() { Price = user.bin.Price, itemList = user.bin.itemList }, user);
+                Console.WriteLine("Заказ сформирован");
+                Console.ReadKey();
+                return;
+            }
+            Console.WriteLine("Заказ не был сформирован");
+            Console.ReadKey();
+        }
+
         public Order GetLastOrder()
         {
             Console.Clear();
 
-            Order order = null;
-
-            if (_itemList.Count != 0) { order = _itemList?.Last(); }          
- 
-            if (order == null){ Console.WriteLine("Список заказов пуст"); }
-
-            Console.Read();
-
-            return order;
+            if (_itemList.Count > 0)
+            {
+                Order order = _itemList?.Last();
+                Console.ReadKey();
+                return order;
+            }
+            Console.WriteLine("Список заказов пуст");
+            Console.ReadKey();
+            return null;
         }
     }
 }

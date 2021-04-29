@@ -47,7 +47,7 @@ namespace Chat_Bot
             user.CreateProfile();
             user = _userBase.GetItem(user);
 
-            Read();
+            ReadKey();
 
             return user;
         }
@@ -72,7 +72,6 @@ namespace Chat_Bot
             {
                 Clear();
 
-                WriteLine();
                 WriteLine($"{user.Name}, Выбери суши для добавления в корзину");
 
                 WriteLine();
@@ -104,7 +103,7 @@ namespace Chat_Bot
                 {
                     case "Просмотреть-аккаунт":
                         user.GetInfo();
-                        Read();
+                        ReadKey();
                         break;
 
                     case "Настроить-аккаунт":
@@ -143,7 +142,7 @@ namespace Chat_Bot
                 {
                     case "Просмотеть-корзину":
                         user.bin.GetAllItems(user);
-                        Read();
+                        ReadKey();
                         break;
 
                     case "Добавить-суши":
@@ -161,19 +160,21 @@ namespace Chat_Bot
         }
 
         void OrderMenu(User user)
-        {
-
-            user.orderBase.AddItem(new() { Price = user.bin.Price, itemList = user.bin.itemList }, user);
-
+        {         
             while (true)
             {
                 Clear();
 
                 switch (ConsoleWork.Chose(new List<string>() { "Просмотреть-заказ", "Оплатить-заказ", "Назад" }))
                 {
+                    case "Сформировать-заказ":
+                        user.orderBase.AddOrder(user);
+                        ReadKey();
+                        break;
+
                     case "Просмотреть-заказ":
-                        user.orderBase.GetLastOrder().GetInfo();
-                        Read();
+                        user?.orderBase?.GetLastOrder()?.GetInfo();
+                        ReadKey();
                         break;
 
                     case "Оплатить-заказ":

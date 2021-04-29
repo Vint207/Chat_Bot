@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static System.Console;
 
 namespace Chat_Bot
 {
@@ -23,37 +24,37 @@ namespace Chat_Bot
 
         internal bool CheckPayment(double money)
         {
-            Console.Clear();
+            Clear();
 
-            Console.WriteLine($"Стоимость заказа {Price} р");
+            WriteLine($"Стоимость заказа {Price} р");
 
             if (money > 0 & Price <= money)
             {
-                Console.WriteLine($"Заказ оплачен");
-                Console.Read();
+                WriteLine($"Заказ оплачен");
+                ReadKey();
                 return true;
             }
+            ReadKey();
             return false;
         }
 
         public void CloseOrder()
         {
-            Console.WriteLine();
             Closed = true;
             CloseDate = DateTime.Now;
         }
 
         public void GetInfo()
         {
-
-            Console.Clear();
-            Console.WriteLine("Твой последний заказ:");
-
-            foreach (var sushi in itemList) { sushi.Key.GetInfo(sushi.Value); }
-
-            Console.WriteLine();
-            Console.WriteLine($"- Стоимость заказа: {Price} р");
-            Console.Read();
+            Clear();
+            if (itemList.Count > 0)
+            {
+                WriteLine("Твой последний заказ:");
+                foreach (var sushi in itemList) { sushi.Key.GetInfo(sushi.Value); }
+                WriteLine($"- Стоимость заказа: {Price} р");
+            }
+            WriteLine();          
+            ReadKey();
         }
     }
 }

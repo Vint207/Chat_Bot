@@ -33,13 +33,15 @@ namespace Chat_Bot
             Console.WriteLine();
             Console.WriteLine($"- Стоимость товаров в корзине: {Price} р");
 
-            Console.Read();
+            Console.ReadKey();
         }
 
         public void EmptyBin(User user)
         {
             Price = 0d;
             itemList.Clear();
+            Console.WriteLine($"Корзина очищена");
+            Console.ReadKey();
         }
 
         public IEnumerator GetEnumerator() => itemList.GetEnumerator();

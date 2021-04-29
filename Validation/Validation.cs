@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using static System.Console;
 
 namespace Chat_Bot
@@ -10,32 +11,37 @@ namespace Chat_Bot
 
         public static void TryValidate(object obj, string propertyName)
         {
-            while (true)
-            {             
-                TypeCode typeCode = Convert.GetTypeCode(obj.GetType().GetProperty(propertyName).GetValue(obj));
+            PropertyInfo propertyInfo = obj.GetType().GetProperty(propertyName);
 
+            while (true)
+            {
                 try
                 {
-                    if (typeCode == TypeCode.Empty) obj.GetType().GetProperty(propertyName).SetValue(obj, ReadLine());
-                    if (typeCode == TypeCode.String) obj.GetType().GetProperty(propertyName).SetValue(obj, ReadLine());
-                    if (typeCode == TypeCode.Int32) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToInt32(ReadLine()));
-                    if (typeCode == TypeCode.Int64) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToInt64(ReadLine()));
-                    if (typeCode == TypeCode.UInt64) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToUInt64(ReadLine()));
-                    if (typeCode == TypeCode.UInt32) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToUInt32(ReadLine()));
-                    if (typeCode == TypeCode.UInt16) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToUInt16(ReadLine()));
-                    if (typeCode == TypeCode.Double) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToDouble(ReadLine()));
-                    if (typeCode == TypeCode.Boolean) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToBoolean(ReadLine()));
-                    if (typeCode == TypeCode.Byte) obj.GetType().GetProperty(propertyName).SetValue(obj, Convert.ToByte(ReadLine()));
+                    switch (Type.GetTypeCode(propertyInfo.PropertyType))
+                    {
+                        case TypeCode.Empty:
+                            propertyInfo.SetValue(obj, ReadLine());
+                            break;
+                        case TypeCode.String:
+                            propertyInfo.SetValue(obj, ReadLine());
+                            break;
+                        case TypeCode.Int32:
+                            propertyInfo.SetValue(obj, Convert.ToInt32(ReadLine())); 
+                            break;
+                        case TypeCode.Double:
+                            propertyInfo.SetValue(obj, Convert.ToDouble(ReadLine()));                         
+                            break;
+                    }
+
+                    var propertyValue = propertyInfo.GetValue(obj);
+                    var results = new List<ValidationResult>();
+                    var context = new ValidationContext(obj) { MemberName = propertyName };
+
+                    if (Validator.TryValidateProperty(propertyValue, context, results)) { break; }
+
+                    foreach (var item in results) { WriteLine(item.ErrorMessage); }
                 }
-                catch (Exception ex) { WriteLine(ex.Message); break; }
-
-                var propertyValue = obj.GetType().GetProperty(propertyName).GetValue(obj);
-                var results = new List<ValidationResult>();
-                var context = new ValidationContext(obj) { MemberName = propertyName };
-
-                if (Validator.TryValidateProperty(propertyValue, context, results)) { break; }
-
-                foreach (var item in results) { WriteLine(item.ErrorMessage); }
+                catch (Exception ex) { WriteLine(ex.Message); }; 
             }
         }
     }

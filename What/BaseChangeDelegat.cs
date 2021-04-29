@@ -33,7 +33,8 @@ namespace Chat_Bot
                         break;
                 }
                 ForegroundColor = ConsoleColor.White;
-            }          
+                ReadKey();
+            }
         }
 
         public static void SushiBaseChangedMessage(Sushi sushi, User user, [CallerMemberName] string method = "")
@@ -57,6 +58,7 @@ namespace Chat_Bot
                         break;
                 }
                 ForegroundColor = ConsoleColor.White;
+                ReadKey();
             }
         }
 
@@ -79,6 +81,7 @@ namespace Chat_Bot
                     break;
             }
             ForegroundColor = ConsoleColor.White;
+            ReadKey();
         }
 
         public static void UserBaseChangedMessage(User user, [CallerMemberName] string method = "")
@@ -100,6 +103,7 @@ namespace Chat_Bot
                     break;
             }
             ForegroundColor = ConsoleColor.White;
+            ReadKey();
         }
 
         public static void BinBaseChanged(Sushi sushi, User user, [CallerMemberName] string method = "")
@@ -123,6 +127,7 @@ namespace Chat_Bot
                         break;
                 }
                 ForegroundColor = ConsoleColor.White;
+                ReadKey();
             }
         }
 
@@ -147,6 +152,7 @@ namespace Chat_Bot
                         break;
                 }
                 ForegroundColor = ConsoleColor.White;
+                ReadKey();
             }
         }
 
@@ -160,6 +166,7 @@ namespace Chat_Bot
                     break;
             }
             ForegroundColor = ConsoleColor.White;
+            ReadKey();
         }
 
         public static void OrderBaseChangedMessage(Order order, User user, [CallerMemberName] string method = "")
@@ -172,6 +179,7 @@ namespace Chat_Bot
                     break;
             }
             ForegroundColor = ConsoleColor.White;
+            ReadKey();
         }
     }
 }

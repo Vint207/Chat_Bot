@@ -30,8 +30,12 @@ namespace Chat_Bot
         public string Password { get; set; } = "";
 
         [Required]
-        [Range(1, 9999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 9999 р")]
+        [Range(1, 999999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 999999 р")]
         public double Money { get; set; }
+
+        [Required]
+        [Range(1, 1000, ErrorMessage = "Сумма должна быть в диапазоне 1 - 1000")]
+        public double LastTransaction { get; set; }
 
 
         internal void ChangingName()
@@ -64,11 +68,13 @@ namespace Chat_Bot
 
             WriteLine($"Введи сумму для перевода:");
 
-            Validation.TryValidate(this, nameof(Money));
+            Validation.TryValidate(this, nameof(LastTransaction));
+
+            Money += LastTransaction;
 
             WriteLine($"Баланс {Name} составляет {Money} р");
 
-            Read();
+            ReadKey();
         }
 
         internal void ChangeProfile()
@@ -98,30 +104,34 @@ namespace Chat_Bot
             ChangingPassword();
         }
 
-
         internal bool PayOrder()
         {
-            WriteLine();
-            WriteLine($"На счету {Money} р");
+            Clear();
 
-            Order order = orderBase.GetLastOrder();
+            Order order = orderBase?.GetLastOrder();
 
-            if (order.CheckPayment(Money))
+            if (order != null)
             {
-                Money -= bin.Price;
-                return true;
-            }
-            WriteLine($"{Name}, на твоем счету недостаточно средств");
+                WriteLine();
+                WriteLine($"На счету {Money} р");
+
+                if (order.CheckPayment(Money))
+                {
+                    Money -= bin.Price;
+                    bin.EmptyBin(this);
+                    return true;
+                }
+                WriteLine($"{Name}, на твоем счету недостаточно средств");
+                ReadKey();
+            }   
             return false;
         }
 
         internal void GetInfo()
         {
             Clear();
-
             WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money} р");
-
-            Read();
+            ReadKey();
         }
     }
 }

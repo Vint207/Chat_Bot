@@ -12,7 +12,7 @@ namespace Chat_Bot
 
             while (true)
             {
-                new ChatBot(users, sushi).MainChat();
+                new ChatBot(users, sushi).MainMenu();
                 ReadLine();
             }
         }

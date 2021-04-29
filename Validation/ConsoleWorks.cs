@@ -38,9 +38,9 @@ namespace Chat_Bot
                     CursorVisible = true;
                     ForegroundColor = ConsoleColor.White;
 
-                    //MatchCollection matches = Regex.Matches(_variants[_position], @"(((\w*\-\w*)|(\w){1,40}))");
+                    MatchCollection matches = Regex.Matches(_variants[_position], @"(((\w*\-\w*)|(\w){1,40}))");                  
 
-                    return Regex.Match(_variants[_position], @"(((\w*\-\w*)|(\w){1,40}))").Value;
+                    return matches[0].Value;
                 }
                 key = ReadKey().Key;
             }

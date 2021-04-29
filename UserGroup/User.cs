@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using static Chat_Bot.Phrases;
 using static System.Console;
 
@@ -22,11 +23,11 @@ namespace Chat_Bot
 
         [Required]
         [RegularExpression(@"^[a-z\nA-Z\nа-я\nА-Я]{1,12}$", ErrorMessage = "Некорректный формат имени")]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [Required]
         [RegularExpression(@"^[a-z\|0-9]{6}$", ErrorMessage = "Некорректный формат пароля")]
-        public string Password { get; set; }
+        public string Password { get; set; } = "";
 
         [Required]
         [Range(1, 9999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 9999 р")]
@@ -37,38 +38,66 @@ namespace Chat_Bot
         {
             WriteLine($"Введи имя. (Используй только буквы)");
 
-            Validation.TryValidate(this, "Name");
+            Validation.TryValidate(this, nameof(Name));
 
             WriteLine($"{Phrase("Greet")}, {Name}.");
+
+            Clear();
         }
 
         internal void ChangingPassword()
         {
             WriteLine("Введи пароль аккаунта. (6 букв латинского алфавита или цифры)");
 
-            Validation.TryValidate(this, "Password");
+            Validation.TryValidate(this, nameof(Password));
 
             WriteLine($"Пароль {Password} {Phrase("Prove")}.");
+
+            Clear();
         }
 
-        internal void PutMoney(double sum)
+        internal void PutMoney()
         {
-            WriteLine($"На счет {Name} переведено {Money} р");
+            Clear();
+            
+            WriteLine($"На счету {Name} {Money} р");
 
-            Validation.TryValidate(this, "Money");
-            Money += sum;
+            WriteLine($"Введи сумму для перевода:");
+
+            Validation.TryValidate(this, nameof(Money));
 
             WriteLine($"Баланс {Name} составляет {Money} р");
+
+            Read();
         }
 
         internal void ChangeProfile()
         {
-            WriteLine();
-            ChangingName();
-            WriteLine();
-            ChangingPassword();
-            WriteLine();
+            while (true)
+            {
+                Clear();
+
+                switch (ConsoleWork.Chose(new List<string>() { "Изменить-имя", "Изменить-пароль", "Назад" }))
+                {
+                    case "Изменить-имя":
+                        ChangingName();
+                        break;
+                    case "Изменить-пароль":
+                        ChangingPassword();
+                        break;
+                    case "Назад":
+                        return;
+                }
+            }
         }
+
+        internal void CreateProfile()
+        {
+            Clear();           
+            ChangingName();
+            ChangingPassword();
+        }
+
 
         internal bool PayOrder()
         {
@@ -88,7 +117,11 @@ namespace Chat_Bot
 
         internal void GetInfo()
         {
-            WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money}");
+            Clear();
+
+            WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money} р");
+
+            Read();
         }
     }
 }

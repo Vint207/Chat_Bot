@@ -156,7 +156,7 @@ namespace Chat_Bot
             switch (method)
             {
                 case "AddItem":
-                    WriteLine($"--Пользователь {user.Name} открыл заказ {order.OpenDate.Date} в {order.OpenDate.TimeOfDay}--");
+                    WriteLine($"--Пользователь {user.Name} открыл заказ {order.OpenDate}--");
                     break;
             }
             ForegroundColor = ConsoleColor.White;
@@ -168,7 +168,7 @@ namespace Chat_Bot
             switch (method)
             {
                 case "AddItem":
-                    WriteLine($"--Пользователь {user.Name} открывает заказ {order.OpenDate} в {order.OpenDate.TimeOfDay}--");
+                    WriteLine($"--Пользователь {user.Name} открывает заказ {order.OpenDate}--");
                     break;
             }
             ForegroundColor = ConsoleColor.White;

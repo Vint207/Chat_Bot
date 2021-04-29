@@ -25,6 +25,7 @@ namespace Chat_Bot
         public void MainChat()
         {
             User user = new();
+            //выбор методов из списка
 
             while (true)
             {

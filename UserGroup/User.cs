@@ -130,7 +130,7 @@ namespace Chat_Bot
         internal void GetInfo()
         {
             Clear();
-            WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money} р");
+            WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money} р\nПочта: ");
             ReadKey();
         }
     }

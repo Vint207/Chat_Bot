@@ -53,8 +53,10 @@ namespace Chat_Bot
 
             if (user.bin.itemList.Count > 0)
             {
-                AddItem(new() { Price = user.bin.Price, itemList = user.bin.itemList }, user);
+                AddItem(new() { Price = user.bin.Price, itemList = new Dictionary<Sushi, int>(user.bin.itemList)}, user);
+                
                 Console.WriteLine("Заказ сформирован");
+                user.bin.EmptyBin(user);
                 Console.ReadKey();
                 return;
             }
@@ -69,7 +71,6 @@ namespace Chat_Bot
             if (_itemList.Count > 0)
             {
                 Order order = _itemList?.Last();
-                Console.ReadKey();
                 return order;
             }
             Console.WriteLine("Список заказов пуст");

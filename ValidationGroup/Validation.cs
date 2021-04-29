@@ -26,10 +26,10 @@ namespace Chat_Bot
                             propertyInfo.SetValue(obj, ReadLine());
                             break;
                         case TypeCode.Int32:
-                            propertyInfo.SetValue(obj, Convert.ToInt32(ReadLine())); 
+                            propertyInfo.SetValue(obj, Convert.ToInt32(ReadLine()));
                             break;
                         case TypeCode.Double:
-                            propertyInfo.SetValue(obj, Convert.ToDouble(ReadLine()));                         
+                            propertyInfo.SetValue(obj, Convert.ToDouble(ReadLine()));
                             break;
                     }
 
@@ -41,7 +41,7 @@ namespace Chat_Bot
 
                     foreach (var item in results) { WriteLine(item.ErrorMessage); }
                 }
-                catch (Exception ex) { WriteLine(ex.Message); }; 
+                catch (Exception ex) { WriteLine(ex.Message); };
             }
         }
     }

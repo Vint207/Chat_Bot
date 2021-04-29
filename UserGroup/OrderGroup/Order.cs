@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using static System.Console;
 
 namespace Chat_Bot
@@ -31,6 +33,8 @@ namespace Chat_Bot
             if (money > 0 & Price <= money)
             {
                 WriteLine($"Заказ оплачен");
+                CloseOrder();
+                Paid = true;
                 ReadKey();
                 return true;
             }
@@ -38,8 +42,12 @@ namespace Chat_Bot
             return false;
         }
 
-        public void CloseOrder()
+        async void CloseOrder() => 
+            await Task.Run(() => WaitTime());       
+
+        void WaitTime()
         {
+            Thread.Sleep(10000);
             Closed = true;
             CloseDate = DateTime.Now;
         }
@@ -51,9 +59,11 @@ namespace Chat_Bot
             {
                 WriteLine("Твой последний заказ:");
                 foreach (var sushi in itemList) { sushi.Key.GetInfo(sushi.Value); }
+                WriteLine($"Открыт {OpenDate}");
+                WriteLine($"Закрыт {CloseDate}");
                 WriteLine($"- Стоимость заказа: {Price} р");
             }
-            WriteLine();          
+            WriteLine();
             ReadKey();
         }
     }

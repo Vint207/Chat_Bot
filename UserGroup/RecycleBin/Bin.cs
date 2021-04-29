@@ -44,6 +44,33 @@ namespace Chat_Bot
             Console.ReadKey();
         }
 
+        public bool BuildBin(SushiBase sushiBase, User user)
+        {
+            while (true)
+            {
+                Console.Clear();
+
+                Console.WriteLine($"{user.Name}, Выбери суши для добавления в корзину");
+
+                Console.WriteLine();
+                Sushi sushi = sushiBase.GetItem(new(ConsoleWork.Chose(sushiBase.GetListItems(user))), user);
+
+                user.bin.AddItemToBin(sushi, user);
+                sushiBase.DeleteItem(sushi, user);
+
+                Console.WriteLine();
+                user.bin.GetAllItemsFromBin(user);
+
+                Console.WriteLine();
+                Console.WriteLine($"{user.Name}, хочешь заказать еще суши?");
+
+                if (!ConsoleWork.Chose()) { break; }
+            }
+            Console.WriteLine();
+
+            return true;
+        }
+
         public IEnumerator GetEnumerator() => itemList.GetEnumerator();
     }
 }

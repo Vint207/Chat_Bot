@@ -63,7 +63,7 @@ namespace Chat_Bot
         internal void PutMoney()
         {
             Clear();
-            
+
             WriteLine($"На счету {Name} {Money} р");
 
             WriteLine($"Введи сумму для перевода:");
@@ -75,6 +75,22 @@ namespace Chat_Bot
             WriteLine($"Баланс {Name} составляет {Money} р");
 
             ReadKey();
+        }
+
+        public void PayOrder()
+        {
+            Order order = orderBase.GetLastOrder();
+
+            if (order != null && !order.Paid)          
+            {
+                if (order.PayOrder(this))
+                {
+                    Money -= order.Price;
+                    return;
+                }
+                WriteLine($"Последний заказ оплачен");
+                ReadKey();
+            }
         }
 
         internal void ChangeProfile()
@@ -99,32 +115,9 @@ namespace Chat_Bot
 
         internal void CreateProfile()
         {
-            Clear();           
+            Clear();
             ChangingName();
             ChangingPassword();
-        }
-
-        internal bool PayOrder()
-        {
-            Clear();
-
-            Order order = orderBase?.GetLastOrder();
-
-            if (order != null)
-            {
-                WriteLine();
-                WriteLine($"На счету {Money} р");
-
-                if (order.CheckPayment(Money))
-                {
-                    Money -= bin.Price;
-                    bin.EmptyBin(this);
-                    return true;
-                }
-                WriteLine($"{Name}, на твоем счету недостаточно средств");
-                ReadKey();
-            }   
-            return false;
         }
 
         internal void GetInfo()

@@ -42,8 +42,23 @@ namespace Chat_Bot
             return false;
         }
 
-        async void CloseOrder() => 
-            await Task.Run(() => WaitTime());       
+        internal bool PayOrder(User user)
+        {
+            Clear();
+
+            WriteLine();
+            WriteLine($"На счету {user.Money} р");
+
+            if (CheckPayment(user.Money)) { return true; }
+
+            WriteLine($"{user.Name}, на твоем счету недостаточно средств");
+            ReadKey();
+
+            return false;
+        }
+
+        async void CloseOrder() =>
+            await Task.Run(() => WaitTime());
 
         void WaitTime()
         {
@@ -60,7 +75,15 @@ namespace Chat_Bot
                 WriteLine("Твой последний заказ:");
                 foreach (var sushi in itemList) { sushi.Key.GetInfo(sushi.Value); }
                 WriteLine($"Открыт {OpenDate}");
-                WriteLine($"Закрыт {CloseDate}");
+
+                if (Closed) 
+                {
+                    WriteLine($"Закрыт {CloseDate}");
+                    ReadKey();
+                    return;
+                }
+                WriteLine($"Не закрыт");
+
                 WriteLine($"- Стоимость заказа: {Price} р");
             }
             WriteLine();

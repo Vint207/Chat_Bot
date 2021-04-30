@@ -107,9 +107,9 @@ namespace Chat_Bot
                         user.orderBase.AddOrder(user);
                         break;
                     case "Просмотреть-заказ":
-                        user?.orderBase?.GetLastOrder()?.GetInfo();
+                        user.orderBase?.GetLastOrder()?.GetInfo();
                         break;
-                    case "Оплатить-заказ":
+                    case "Оплатить-заказ":              
                         user.PayOrder();
                         break;
                     case "Назад":

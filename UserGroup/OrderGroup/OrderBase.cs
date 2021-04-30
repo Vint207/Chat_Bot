@@ -68,14 +68,16 @@ namespace Chat_Bot
         {
             Console.Clear();
 
-            if (_itemList.Count > 0)
+            if (_itemList.Count == 0)
             {
-                Order order = _itemList?.Last();
-                return order;
+                Console.WriteLine("Список заказов пуст");
+                Console.ReadKey();
+                return null;
             }
-            Console.WriteLine("Список заказов пуст");
-            Console.ReadKey();
-            return null;
+
+            Order order = _itemList?.Last();
+
+            return order;
         }
     }
 }

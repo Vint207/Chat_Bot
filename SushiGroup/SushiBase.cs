@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace Chat_Bot
 {
-    public class SushiBase : ICRUD<Sushi, User>
+    public class SushiBase : ICRUD<Sushi, Guest>
     {
 
         public Dictionary<Sushi, int> itemList;
-        public event BaseChangedEvent<Sushi, User> baseChangedEvent;
-        public BaseChangedMessage<Sushi, User> baseChangedMessage;
+        public event BaseChangedEvent<Sushi, Guest> baseChangedEvent;
+        public BaseChangedMessage<Sushi, Guest> baseChangedMessage;
 
         public SushiBase()
         {
@@ -25,7 +25,7 @@ namespace Chat_Bot
             };
         }
 
-        public bool AddItem(Sushi sushi, User user)
+        public bool AddItem(Sushi sushi, Guest user)
         {
             baseChangedMessage?.Invoke(sushi, user);
 
@@ -46,7 +46,7 @@ namespace Chat_Bot
             return false;
         }
 
-        public bool DeleteItem(Sushi sushi, User user)
+        public bool DeleteItem(Sushi sushi, Guest user)
         {
             baseChangedMessage?.Invoke(sushi, user);
 
@@ -61,8 +61,8 @@ namespace Chat_Bot
             }
             return false;
         }
-
-        public Sushi GetItem(Sushi sushi, User user)
+        
+        public Sushi GetItem(Sushi sushi, Guest user)
         {
             baseChangedMessage?.Invoke(sushi, user);
 
@@ -78,26 +78,32 @@ namespace Chat_Bot
             return null;
         }
 
-        public bool GetAllItems(User user)
+        public bool GetAllItemsInfo(Guest guest)
         {
-            baseChangedMessage?.Invoke(null, user);
+            baseChangedMessage?.Invoke(null, guest);
 
-            foreach (var item in itemList) { item.Key.GetInfo(item.Value); }
-
-            baseChangedEvent?.Invoke(null, user);
+            foreach (var item in itemList)
+            {
+                if (item.Value > 0)
+                { item.Key.GetInfo(item.Value); }
+            }
+            baseChangedEvent?.Invoke(null, guest);
 
             return true;
         }
 
-        public List<string> GetListItems(User user)
+        public List<string> GetListItems(Guest guest)
         {
-            baseChangedMessage?.Invoke(null, user);
+            baseChangedMessage?.Invoke(null, guest);
 
             List<string> sushiList = new();
 
-            foreach (var item in itemList) { sushiList.Add($" {item.Key.Name}. Цена {item.Key.Price} р. Количество {item.Value} шт"); }
-
-            baseChangedEvent?.Invoke(null, user);
+            foreach (var item in itemList)
+            {
+                if (item.Value > 0)
+                { sushiList.Add($" {item.Key.Name}. Цена {item.Key.Price} р. Количество {item.Value} шт"); }
+            }
+            baseChangedEvent?.Invoke(null, guest);
 
             return sushiList;
         }

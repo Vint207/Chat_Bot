@@ -13,7 +13,7 @@ namespace Chat_Bot
         static List<string> _variants;
         static List<string> _yesNo = new() { "Да", "Нет" };
 
-        public static string Chose(List<string> variants)
+        public static string Choose(List<string> variants)
         {
             _variants = variants;
             ConsoleKey key = DownArrow;
@@ -46,9 +46,9 @@ namespace Chat_Bot
             }
         }
 
-        public static bool Chose()
+        public static bool Choose()
         {
-            return Chose(_yesNo) switch
+            return Choose(_yesNo) switch
             {
                 "Да" => true,
                 "Нет" => false,

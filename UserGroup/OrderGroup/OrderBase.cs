@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Chat_Bot
 {
-    class OrderBase : ICRUD<Order, User>
+    public class OrderBase : ICRUD<Order, User>
     {
         List<Order> _itemList;
         public event BaseChangedEvent<Order, User> baseChangedEvent;

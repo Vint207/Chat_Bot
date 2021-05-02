@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
+using static System.Console;
 
 namespace Chat_Bot
 {
@@ -10,65 +10,86 @@ namespace Chat_Bot
 
         public Bin() { itemList = new(); }
 
-        public void AddItemToBin(Sushi sushi, User user)
+        public void AddItemToBin(SushiBase sushiBase, User user)
         {
-            AddItem(sushi, user);
+            while (true)
+            {
+                Clear();
+                WriteLine($"{user.Name}, Выбери суши для добавления в корзину.");
 
-            if (sushi != null) { Price += sushi.Price; }
+                WriteLine();
+                Sushi sushi = sushiBase.GetItem(new(ConsoleWork.Choose(sushiBase.GetListItems(user))), user);
+
+                AddItem(sushi, user);
+                sushiBase.DeleteItem(sushi, user);
+
+                Price += sushi.Price;
+
+                WriteLine();
+                user.bin.GetAllItemsFromBin(user);
+
+                WriteLine();
+                WriteLine($"{user.Name}, хочешь заказать еще суши?");
+
+                if (!ConsoleWork.Choose()) { break; }
+            }
         }
 
-        public void DeleteItemFromBin(Sushi sushi, User user)
+        public void DeleteItemFromBin(SushiBase sushiBase, User user)
         {
-            DeleteItem(sushi, user);
+            while (BinIsNotEmpty())
+            {
+                Clear();
+                WriteLine($"{user.Name}, Выбери суши, которые хочешь удалить из корзины.");
 
-            if (sushi != null) { Price -= sushi.Price; }
+                WriteLine();
+                Sushi sushi = GetItem(new(ConsoleWork.Choose(GetListItems(user))), user);
+
+                DeleteItem(sushi, user);
+                sushiBase.AddItem(sushi, user);
+
+                Price -= sushi.Price;
+
+                WriteLine();
+                user.bin.GetAllItemsFromBin(user);
+
+                WriteLine();
+                WriteLine($"{user.Name}, хочешь удалить еще суши?");
+
+                if (!ConsoleWork.Choose()) { return; }
+            }
+            Clear();
+            WriteLine($"Корзина пуста.");
+            ReadKey();
+
+            bool BinIsNotEmpty()
+            {
+                foreach (var item in itemList)
+                {
+                    if (item.Value > 0)
+                    { return true; }
+                }
+                return false;
+            }
         }
 
         public void GetAllItemsFromBin(User user)
         {
-            Console.Clear();
+            Clear();
+            WriteLine($"Состав корзины:");
+            GetAllItemsInfo(user);
 
-            GetAllItems(user);
-
-            Console.WriteLine();
-            Console.WriteLine($"- Стоимость товаров в корзине: {Price} р");
-
-            Console.ReadKey();
+            WriteLine();
+            WriteLine($"- Стоимость товаров в корзине: {Price} р");
+            ReadKey();
         }
 
         public void EmptyBin(User user)
         {
             Price = 0d;
             itemList.Clear();
-            Console.WriteLine($"Корзина очищена");
-            Console.ReadKey();
-        }
-
-        public bool BuildBin(SushiBase sushiBase, User user)
-        {
-            while (true)
-            {
-                Console.Clear();
-
-                Console.WriteLine($"{user.Name}, Выбери суши для добавления в корзину");
-
-                Console.WriteLine();
-                Sushi sushi = sushiBase.GetItem(new(ConsoleWork.Chose(sushiBase.GetListItems(user))), user);
-
-                user.bin.AddItemToBin(sushi, user);
-                sushiBase.DeleteItem(sushi, user);
-
-                Console.WriteLine();
-                user.bin.GetAllItemsFromBin(user);
-
-                Console.WriteLine();
-                Console.WriteLine($"{user.Name}, хочешь заказать еще суши?");
-
-                if (!ConsoleWork.Chose()) { break; }
-            }
-            Console.WriteLine();
-
-            return true;
+            WriteLine($"Корзина очищена");
+            ReadKey();
         }
 
         public IEnumerator GetEnumerator() => itemList.GetEnumerator();

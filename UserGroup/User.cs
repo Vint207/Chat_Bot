@@ -4,28 +4,23 @@ using static System.Console;
 
 namespace Chat_Bot
 {
-    public sealed class User
+    public class User : Guest
     {
 
-        internal Bin bin;
-        internal OrderBase orderBase;
+        public OrderBase orderBase;
 
         public User()
         {
-            bin = new();
-            orderBase = new();
-            bin.baseChangedMessage = EventMethods.BinBaseChangedMessage;
-            bin.baseChangedEvent += EventMethods.BinBaseChanged;
-            orderBase.baseChangedMessage = EventMethods.OrderBaseChangedMessage;
-            orderBase.baseChangedEvent += EventMethods.OrderBaseChanged;
+            //bin = new();
+            //orderBase = new();
+            //bin.baseChangedMessage = EventMethods.BinBaseChangedMessage;
+            //bin.baseChangedEvent += EventMethods.BinBaseChanged;
+            //orderBase.baseChangedMessage = EventMethods.OrderBaseChangedMessage;
+            //orderBase.baseChangedEvent += EventMethods.OrderBaseChanged;
         }
 
         [Required]
-        [RegularExpression(@"^[a-z\nA-Z\nа-я\nА-Я]{1,12}$", ErrorMessage = "Некорректный формат имени")]
-        public string Name { get; set; }
-
-        [Required]
-        [RegularExpression(@"^[a-z\|0-9]{6}$", ErrorMessage = "Некорректный формат пароля")]
+        [RegularExpression(@"^[a-z\|A-Z\|0-9]{6,12}$", ErrorMessage = "Некорректный формат пароля")]
         public string Password { get; set; }
 
         [Required]
@@ -50,14 +45,14 @@ namespace Chat_Bot
 
             Validation.TryValidate(this, nameof(Name));
 
-            WriteLine($"{Phrase("Greet")}, {Name}.");          
+            WriteLine($"{Phrase("Greet")}, {Name}.");
         }
 
         internal void ChangingPassword()
         {
             Clear();
 
-            WriteLine("Введи пароль аккаунта. (6 букв латинского алфавита или цифры)");
+            WriteLine("Введи пароль аккаунта. (6-12 букв латинского алфавита или цифр)");
 
             Validation.TryValidate(this, nameof(Password));
 
@@ -74,7 +69,7 @@ namespace Chat_Bot
             {
                 Validation.TryValidate(this, nameof(Mail));
 
-                if (userBase.GetItem(new User() { Mail = Mail }) == null)
+                if (userBase.GetItem(new Admin() { Mail = Mail }) == null)
                 {
                     WriteLine($"Адрес электронной почты {Mail} {Phrase("Prove")}.");
                     ReadKey();
@@ -108,12 +103,14 @@ namespace Chat_Bot
 
             if (order != null)
             {
-                if (!order.Paid && order.PayOrder(this))
+                if (!order.Paid && order.PayOrder((Admin)this))
                 {
                     Money -= order.Price;
                     return;
                 }
-                WriteLine($"Последний заказ оплачен");
+                if (order.Paid)
+                { WriteLine($"Последний заказ оплачен"); }
+
                 ReadKey();
             }
         }

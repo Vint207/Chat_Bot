@@ -6,9 +6,9 @@ namespace Chat_Bot
     class Registration
     {
 
-        public static User Registrate(UserBase userBase)
+        public static Admin Registrate(UserBase userBase)
         {
-            User user = new();
+            Admin user = new();
 
             user.ChangingName();
             user.ChangingPassword();

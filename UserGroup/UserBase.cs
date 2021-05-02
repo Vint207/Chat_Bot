@@ -7,7 +7,7 @@ namespace Chat_Bot
     class UserBase : ICRUD<User>
     {
 
-        List<User> _itemList = new();
+        List<User> _itemList = new() { new() { Name = "Admin", Password = "Admin!01", Mail = "admin@mail.com" } };
         public event BaseChangedEvent<User> baseChangedEvent;
         public BaseChangedMessage<User> baseChangedMessage;
 
@@ -29,24 +29,24 @@ namespace Chat_Bot
 
             user = _itemList.Find(item => item.Mail == user.Mail);
 
-            if (user != null) 
+            if (user != null)
             {
-                _itemList.Remove(user);         
+                _itemList.Remove(user);
                 baseChangedEvent?.Invoke(user);
                 return true;
-            }       
+            }
             return false;
         }
 
         public User GetItem(User user)
         {
-            baseChangedMessage?.Invoke(user);         
+            baseChangedMessage?.Invoke(user);
 
             user = _itemList.Find(item => item.Mail == user.Mail);
 
-            if (user != null) 
-            { 
-                user.GetInfo();
+            if (user != null)
+            {
+                //user.GetInfo();
                 baseChangedEvent?.Invoke(user);
                 return user;
             }

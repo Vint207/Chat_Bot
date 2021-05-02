@@ -12,7 +12,7 @@ namespace Chat_Bot
     public static class EventMethods
     {
 
-        public static void SushiBaseChanged(Sushi sushi, User user, [CallerMemberName] string method = "")
+        public static void SushiBaseChanged(Sushi sushi, Guest user, [CallerMemberName] string method = "")
         {
             if (sushi != null || method.Equals("GetAllItems"))
             {
@@ -37,7 +37,7 @@ namespace Chat_Bot
             }
         }
 
-        public static void SushiBaseChangedMessage(Sushi sushi, User user, [CallerMemberName] string method = "")
+        public static void SushiBaseChangedMessage(Sushi sushi, Guest user, [CallerMemberName] string method = "")
         {
             if (sushi != null || method.Equals("GetAllItems"))
             {
@@ -62,7 +62,7 @@ namespace Chat_Bot
             }
         }
 
-        public static void UserBaseChanged(User user, [CallerMemberName] string method = "")
+        public static void UserBaseChanged(Guest user, [CallerMemberName] string method = "")
         {
             ForegroundColor = ConsoleColor.Green;
             switch (method)
@@ -84,7 +84,7 @@ namespace Chat_Bot
             ReadKey();
         }
 
-        public static void UserBaseChangedMessage(User user, [CallerMemberName] string method = "")
+        public static void UserBaseChangedMessage(Guest user, [CallerMemberName] string method = "")
         {
             ForegroundColor = ConsoleColor.Blue;
             switch (method)
@@ -106,7 +106,7 @@ namespace Chat_Bot
             ReadKey();
         }
 
-        public static void BinBaseChanged(Sushi sushi, User user, [CallerMemberName] string method = "")
+        public static void BinBaseChanged(Sushi sushi, Guest user, [CallerMemberName] string method = "")
         {
             if (sushi != null || method.Equals("GetAllItems"))
             {
@@ -131,7 +131,7 @@ namespace Chat_Bot
             }
         }
 
-        public static void BinBaseChangedMessage(Sushi sushi, User user, [CallerMemberName] string method = "")
+        public static void BinBaseChangedMessage(Sushi sushi, Guest user, [CallerMemberName] string method = "")
         {
             if (sushi != null || method.Equals("GetAllItems"))
             {
@@ -156,7 +156,7 @@ namespace Chat_Bot
             }
         }
 
-        public static void OrderBaseChanged(Order order, User user, [CallerMemberName] string method = "")
+        public static void OrderBaseChanged(Order order, Guest user, [CallerMemberName] string method = "")
         {
             ForegroundColor = ConsoleColor.Green;
             switch (method)
@@ -169,7 +169,7 @@ namespace Chat_Bot
             ReadKey();
         }
 
-        public static void OrderBaseChangedMessage(Order order, User user, [CallerMemberName] string method = "")
+        public static void OrderBaseChangedMessage(Order order, Guest user, [CallerMemberName] string method = "")
         {
             ForegroundColor = ConsoleColor.Green;
             switch (method)

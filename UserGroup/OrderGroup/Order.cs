@@ -8,6 +8,7 @@ namespace Chat_Bot
 {
     public class Order
     {
+
         public Dictionary<Sushi, int> itemList;
         public double Price { get; set; }
         public bool Paid { get; set; }
@@ -51,8 +52,7 @@ namespace Chat_Bot
 
             if (CheckPayment(user.Money)) { return true; }
 
-            WriteLine($"{user.Name}, на твоем счету недостаточно средств");
-            ReadKey();
+            WriteLine($"{user.Name}, на твоем счету недостаточно средств");            
 
             return false;
         }

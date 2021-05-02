@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Chat_Bot.Phrases;
 using static System.Console;
 
 
@@ -26,26 +25,35 @@ namespace Chat_Bot
             {
                 Clear();
 
-                switch (ConsoleWork.Chose(new List<string>() { "Регистрация", "Вход" }))
+                switch (ConsoleWork.Choose(new List<string>() { "Регистрация", "Вход-пользователь", "Вход-гость", "Вход-администратор" }))
                 {
                     case "Регистрация":
-                        AccauntMenu(Registration.Registrate(_userBase));
+                        UserMenu(Registration.Registrate(_userBase));
                         break;
-                    case "Вход":
+                    case "Вход-пользователь":
                         User user = Registration.Entering(_userBase);
-                        if (user != null) { AccauntMenu(user); }
+                        if (user != null) { UserMenu(user); }
                         break;
+                    case "Вход-гость":
+                        GuestMenu(new User()); 
+                        break;
+                    //case "Вход-администратор":
+                    //    User user = new Admin();
+                    //    user = Registration.Entering(_userBase);
+                    //    Admin admin = (Admin)user;
+                    //    if (admin != null) { AdminMenu(admin); }
+                    //    break;
                 }
             }
-        }     
+        }
 
-        void AccauntMenu(User user)
+        void UserMenu(User user)
         {
             while (true)
             {
                 Clear();
 
-                switch (ConsoleWork.Chose(new List<string>() { "Просмотреть-аккаунт", "Настроить-аккаунт", "Пополнить-счет", "Меню-суши", "Меню-корзины", "Меню-заказа", "Выйти" }))
+                switch (ConsoleWork.Choose(new List<string>() { "Просмотреть-аккаунт", "Настроить-аккаунт", "Пополнить-счет", "Меню-суши", "Меню-корзины", "Меню-заказа", "Выйти" }))
                 {
                     case "Просмотреть-аккаунт":
                         user.GetInfo();
@@ -57,7 +65,9 @@ namespace Chat_Bot
                         user.PutMoney();
                         break;
                     case "Меню-суши":
-                        user.bin.BuildBin(_sushiBase, user);
+                        Clear();
+                        _sushiBase.GetAllItemsInfo(user);
+                        ReadKey();
                         break;
                     case "Меню-корзины":
                         BinMenu(user);
@@ -71,13 +81,52 @@ namespace Chat_Bot
             }
         }
 
-        internal void ProfileMenu(User user)
+        void GuestMenu(Guest guest)
         {
             while (true)
             {
                 Clear();
 
-                switch (ConsoleWork.Chose(new List<string>() { "Изменить-имя", "Изменить-пароль", "Изменить-почту", "Назад" }))
+                switch (ConsoleWork.Choose(new List<string>() { "Меню-суши", "Меню-корзины", "Меню-заказа", "Выйти" }))
+                {                   
+                    case "Меню-суши":
+                        Clear();
+                        _sushiBase.GetAllItemsInfo(guest);
+                        ReadKey();
+                        break;
+                    case "Меню-корзины":
+                        BinMenu(guest as User);
+                        break;
+                    case "Меню-заказа":
+                        OrderMenu(guest as User);
+                        break;
+                    case "Выйти":
+                        return;
+                }
+            }
+        }
+
+        void AdminMenu(Guest guest)
+        {
+            while (true)
+            {
+                Clear();
+
+                switch (ConsoleWork.Choose(new List<string>() {  "Выйти" }))
+                {                   
+                    case "Выйти":
+                        return;
+                }
+            }
+        }
+
+        void ProfileMenu(User user)
+        {
+            while (true)
+            {
+                Clear();
+
+                switch (ConsoleWork.Choose(new List<string>() { "Изменить-имя", "Изменить-пароль", "Изменить-почту", "Назад" }))
                 {
                     case "Изменить-имя":
                         user.ChangingName();
@@ -100,16 +149,16 @@ namespace Chat_Bot
             {
                 Clear();
 
-                switch (ConsoleWork.Chose(new List<string>() { "Просмотеть-корзину", "Добавить-суши", "Оформить-заказ", "Назад" }))
+                switch (ConsoleWork.Choose(new List<string>() { "Просмотеть-корзину", "Добавить-суши", "Удалить-суши", "Назад" }))
                 {
                     case "Просмотеть-корзину":
                         user.bin.GetAllItemsFromBin(user);
                         break;
                     case "Добавить-суши":
-                        user.bin.BuildBin(_sushiBase, user);
+                        user.bin.AddItemToBin(_sushiBase, user);
                         break;
-                    case "Оформить-заказ":
-                        OrderMenu(user);
+                    case "Удалить-суши":
+                        user.bin.DeleteItemFromBin(_sushiBase, user);
                         break;
                     case "Назад":
                         return;
@@ -118,12 +167,12 @@ namespace Chat_Bot
         }
 
         void OrderMenu(User user)
-        {         
+        {
             while (true)
             {
                 Clear();
 
-                switch (ConsoleWork.Chose(new List<string>() { "Сформировать-заказ", "Просмотреть-заказ", "Оплатить-заказ", "Назад" }))
+                switch (ConsoleWork.Choose(new List<string>() { "Сформировать-заказ", "Просмотреть-заказ", "Оплатить-заказ", "Назад" }))
                 {
                     case "Сформировать-заказ":
                         user.orderBase.AddOrder(user);
@@ -131,7 +180,7 @@ namespace Chat_Bot
                     case "Просмотреть-заказ":
                         user.orderBase?.GetLastOrder()?.GetInfo();
                         break;
-                    case "Оплатить-заказ":              
+                    case "Оплатить-заказ":
                         user.PayOrder();
                         break;
                     case "Назад":

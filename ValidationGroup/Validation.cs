@@ -38,10 +38,17 @@ namespace Chat_Bot
                     var context = new ValidationContext(obj) { MemberName = propertyName };
 
                     if (Validator.TryValidateProperty(propertyValue, context, results)) { break; }
+                   
+                    Clear();
 
                     foreach (var item in results) { WriteLine(item.ErrorMessage); }
                 }
-                catch (Exception ex) { WriteLine(ex.Message); };
+                catch (Exception ex)
+                {
+                    Clear();
+                    WriteLine(ex.Message); 
+                };              
+                WriteLine("Попробуй еще раз.");
             }
         }
     }

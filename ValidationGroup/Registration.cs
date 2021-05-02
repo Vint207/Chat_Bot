@@ -9,7 +9,10 @@ namespace Chat_Bot
         public static User Registrate(UserBase userBase)
         {
             User user = new();
-            user.CreateProfile();
+
+            user.ChangingName();
+            user.ChangingPassword();
+            user.ChangingMail(userBase);
             userBase.AddItem(user);
 
             WriteLine();
@@ -20,10 +23,15 @@ namespace Chat_Bot
 
         public static User Entering(UserBase userBase)
         {
+            Clear();
+            WriteLine($"Для входа введи адрес электронной почты.");
+
             User user = new();
-            user.CreateProfile();
+            Validation.TryValidate(user, nameof(user.Mail));
+
             user = userBase.GetItem(user);
 
+            ReadKey();
             return user;
         }
     }

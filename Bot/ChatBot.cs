@@ -14,7 +14,6 @@ namespace Chat_Bot
         {
             _userBase = userBase;
             _sushiBase = sushiBase;
-            //_botName = "Гробик";
             _userBase.baseChangedMessage = EventMethods.UserBaseChangedMessage;
             _userBase.baseChangedEvent += EventMethods.UserBaseChanged;
             _sushiBase.baseChangedMessage = EventMethods.SushiBaseChangedMessage;
@@ -52,7 +51,7 @@ namespace Chat_Bot
                         user.GetInfo();
                         break;
                     case "Настроить-аккаунт":
-                        user.ChangeProfile();
+                        ProfileMenu(user);
                         break;
                     case "Пополнить-счет":
                         user.PutMoney();
@@ -67,6 +66,29 @@ namespace Chat_Bot
                         OrderMenu(user);
                         break;
                     case "Выйти":
+                        return;
+                }
+            }
+        }
+
+        internal void ProfileMenu(User user)
+        {
+            while (true)
+            {
+                Clear();
+
+                switch (ConsoleWork.Chose(new List<string>() { "Изменить-имя", "Изменить-пароль", "Изменить-почту", "Назад" }))
+                {
+                    case "Изменить-имя":
+                        user.ChangingName();
+                        break;
+                    case "Изменить-пароль":
+                        user.ChangingPassword();
+                        break;
+                    case "Изменить-почту":
+                        user.ChangingMail(_userBase);
+                        break;
+                    case "Назад":
                         return;
                 }
             }

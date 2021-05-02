@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static Chat_Bot.Phrases;
 using static System.Console;
 
@@ -23,11 +22,16 @@ namespace Chat_Bot
 
         [Required]
         [RegularExpression(@"^[a-z\nA-Z\nа-я\nА-Я]{1,12}$", ErrorMessage = "Некорректный формат имени")]
-        public string Name { get; set; } = "";
+        public string Name { get; set; }
 
         [Required]
         [RegularExpression(@"^[a-z\|0-9]{6}$", ErrorMessage = "Некорректный формат пароля")]
-        public string Password { get; set; } = "";
+        public string Password { get; set; }
+
+        [Required]
+        [RegularExpression(@"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+         @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$", ErrorMessage = "Недопустимый адрес электронной почты")]
+        public string Mail { get; set; }
 
         [Required]
         [Range(1, 999999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 999999 р")]
@@ -40,24 +44,45 @@ namespace Chat_Bot
 
         internal void ChangingName()
         {
+            Clear();
+
             WriteLine($"Введи имя. (Используй только буквы)");
 
             Validation.TryValidate(this, nameof(Name));
 
-            WriteLine($"{Phrase("Greet")}, {Name}.");
-
-            Clear();
+            WriteLine($"{Phrase("Greet")}, {Name}.");          
         }
 
         internal void ChangingPassword()
         {
+            Clear();
+
             WriteLine("Введи пароль аккаунта. (6 букв латинского алфавита или цифры)");
 
             Validation.TryValidate(this, nameof(Password));
 
             WriteLine($"Пароль {Password} {Phrase("Prove")}.");
+        }
 
+        internal void ChangingMail(UserBase userBase)
+        {
             Clear();
+
+            WriteLine("Введи адрес электронной почты.");
+
+            while (true)
+            {
+                Validation.TryValidate(this, nameof(Mail));
+
+                if (userBase.GetItem(new User() { Mail = Mail }) == null)
+                {
+                    WriteLine($"Адрес электронной почты {Mail} {Phrase("Prove")}.");
+                    ReadKey();
+                    return;
+                }
+                WriteLine("Данный адрес электронной почты уже зарегистрирован. Попробуй другой.");
+                ReadKey();
+            }
         }
 
         internal void PutMoney()
@@ -81,9 +106,9 @@ namespace Chat_Bot
         {
             Order order = orderBase.GetLastOrder();
 
-            if (order != null && !order.Paid)          
+            if (order != null)
             {
-                if (order.PayOrder(this))
+                if (!order.Paid && order.PayOrder(this))
                 {
                     Money -= order.Price;
                     return;
@@ -93,37 +118,10 @@ namespace Chat_Bot
             }
         }
 
-        internal void ChangeProfile()
-        {
-            while (true)
-            {
-                Clear();
-
-                switch (ConsoleWork.Chose(new List<string>() { "Изменить-имя", "Изменить-пароль", "Назад" }))
-                {
-                    case "Изменить-имя":
-                        ChangingName();
-                        break;
-                    case "Изменить-пароль":
-                        ChangingPassword();
-                        break;
-                    case "Назад":
-                        return;
-                }
-            }
-        }
-
-        internal void CreateProfile()
-        {
-            Clear();
-            ChangingName();
-            ChangingPassword();
-        }
-
         internal void GetInfo()
         {
             Clear();
-            WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money} р\nПочта: ");
+            WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money} р\nПочта: {Mail}");
             ReadKey();
         }
     }

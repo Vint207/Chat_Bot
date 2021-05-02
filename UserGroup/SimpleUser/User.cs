@@ -11,8 +11,8 @@ namespace Chat_Bot
 
         public User()
         {
-            //bin = new();
-            //orderBase = new();
+            bin = new();
+            orderBase = new();
             //bin.baseChangedMessage = EventMethods.BinBaseChangedMessage;
             //bin.baseChangedEvent += EventMethods.BinBaseChanged;
             //orderBase.baseChangedMessage = EventMethods.OrderBaseChangedMessage;
@@ -33,11 +33,11 @@ namespace Chat_Bot
         public double Money { get; set; }
 
         [Required]
-        [Range(1, 1000, ErrorMessage = "Сумма должна быть в диапазоне 1 - 1000")]
+        [Range(1, 9999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 9999")]
         public double LastTransaction { get; set; }
 
 
-        internal void ChangingName()
+        internal void ChangeName()
         {
             Clear();
 
@@ -48,7 +48,7 @@ namespace Chat_Bot
             WriteLine($"{Phrase("Greet")}, {Name}.");
         }
 
-        internal void ChangingPassword()
+        internal void ChangePassword()
         {
             Clear();
 
@@ -59,7 +59,7 @@ namespace Chat_Bot
             WriteLine($"Пароль {Password} {Phrase("Prove")}.");
         }
 
-        internal void ChangingMail(UserBase userBase)
+        internal void ChangeMail(UserBase userBase)
         {
             Clear();
 
@@ -118,8 +118,9 @@ namespace Chat_Bot
         internal void GetInfo()
         {
             Clear();
+            WriteLine($"Данные пользователя:");
             WriteLine($"Имя: {Name}\nПароль: {Password}\nБаланс: {Money} р\nПочта: {Mail}");
             ReadKey();
-        }
+        }        
     }
 }

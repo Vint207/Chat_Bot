@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace Chat_Bot
 {
-    class UserBase : ICRUD<User>
+    public class UserBase : ICRUD<User>
     {
 
-        List<User> _itemList = new() { new() { Name = "Admin", Password = "Admin!01", Mail = "admin@mail.com" } };
+        List<User> _itemList = new() { new() { Name = "Admin", Password = "admin01", Mail = "admin@mail.com" } };
         public event BaseChangedEvent<User> baseChangedEvent;
         public BaseChangedMessage<User> baseChangedMessage;
 
@@ -27,7 +27,7 @@ namespace Chat_Bot
         {
             baseChangedMessage?.Invoke(user);
 
-            user = _itemList.Find(item => item.Mail == user.Mail);
+            user = _itemList.Find(item => item.Mail == user.Mail && item.Password == user.Password);
 
             if (user != null)
             {
@@ -42,11 +42,10 @@ namespace Chat_Bot
         {
             baseChangedMessage?.Invoke(user);
 
-            user = _itemList.Find(item => item.Mail == user.Mail);
+            user = _itemList.Find(item => item.Mail == user.Mail && item.Password == user.Password);
 
             if (user != null)
             {
-                //user.GetInfo();
                 baseChangedEvent?.Invoke(user);
                 return user;
             }
@@ -58,7 +57,8 @@ namespace Chat_Bot
         {
             baseChangedMessage?.Invoke(user);
 
-            foreach (var item in _itemList) { item.GetInfo(); }
+            foreach (var item in _itemList) 
+            { item.GetInfo(); }
 
             baseChangedEvent?.Invoke(user);
 

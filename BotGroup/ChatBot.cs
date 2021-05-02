@@ -25,24 +25,25 @@ namespace Chat_Bot
             {
                 Clear();
 
-                switch (ConsoleWork.Choose(new List<string>() { "Регистрация", "Вход-пользователь", "Вход-гость", "Вход-администратор" }))
+                switch (ConsoleWork.Choose(new List<string>() { "Регистрация", "Вход-пользователь", "Вход-гость" }))
                 {
                     case "Регистрация":
                         UserMenu(Registration.Registrate(_userBase));
                         break;
                     case "Вход-пользователь":
-                        User user = Registration.Entering(_userBase);
-                        if (user != null) { UserMenu(user); }
+                        User user = new Admin();
+                        user = Registration.LogIn(_userBase);
+                        if (user != null)
+                        {
+                            if (user.Mail != "admin@mail.com")
+                            { UserMenu(user); }
+                            else
+                            { AdminMenu(new() { Name = "Администратор"}); }
+                        }
                         break;
                     case "Вход-гость":
-                        GuestMenu(new User()); 
+                        GuestMenu(new User());
                         break;
-                    //case "Вход-администратор":
-                    //    User user = new Admin();
-                    //    user = Registration.Entering(_userBase);
-                    //    Admin admin = (Admin)user;
-                    //    if (admin != null) { AdminMenu(admin); }
-                    //    break;
                 }
             }
         }
@@ -87,18 +88,12 @@ namespace Chat_Bot
             {
                 Clear();
 
-                switch (ConsoleWork.Choose(new List<string>() { "Меню-суши", "Меню-корзины", "Меню-заказа", "Выйти" }))
-                {                   
+                switch (ConsoleWork.Choose(new List<string>() { "Меню-суши", "Выйти" }))
+                {
                     case "Меню-суши":
                         Clear();
                         _sushiBase.GetAllItemsInfo(guest);
                         ReadKey();
-                        break;
-                    case "Меню-корзины":
-                        BinMenu(guest as User);
-                        break;
-                    case "Меню-заказа":
-                        OrderMenu(guest as User);
                         break;
                     case "Выйти":
                         return;
@@ -106,14 +101,23 @@ namespace Chat_Bot
             }
         }
 
-        void AdminMenu(Guest guest)
+        void AdminMenu(Admin admin)
         {
             while (true)
             {
                 Clear();
 
-                switch (ConsoleWork.Choose(new List<string>() {  "Выйти" }))
-                {                   
+                switch (ConsoleWork.Choose(new List<string>() { "Просмотреть-пользователей", "Просмотреть-пользователя", "Удалить-пользователя", "Выйти" }))
+                {
+                    case "Просмотреть-пользователей":
+                        admin.AllUsersInfo(_userBase);
+                        break;
+                    case "Просмотреть-пользователя":
+                        admin.FindUserInfo(_userBase);
+                        break;
+                    case "Удалить-пользователя":
+                        admin.AllUsersInfo(_userBase);
+                        break;
                     case "Выйти":
                         return;
                 }
@@ -129,13 +133,13 @@ namespace Chat_Bot
                 switch (ConsoleWork.Choose(new List<string>() { "Изменить-имя", "Изменить-пароль", "Изменить-почту", "Назад" }))
                 {
                     case "Изменить-имя":
-                        user.ChangingName();
+                        user.ChangeName();
                         break;
                     case "Изменить-пароль":
-                        user.ChangingPassword();
+                        user.ChangePassword();
                         break;
                     case "Изменить-почту":
-                        user.ChangingMail(_userBase);
+                        user.ChangeMail(_userBase);
                         break;
                     case "Назад":
                         return;

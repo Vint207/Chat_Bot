@@ -10,9 +10,9 @@ namespace Chat_Bot
         {
             Admin user = new();
 
-            user.ChangingName();
-            user.ChangingPassword();
-            user.ChangingMail(userBase);
+            user.ChangeName();
+            user.ChangePassword();
+            user.ChangeMail(userBase);
             userBase.AddItem(user);
 
             WriteLine();
@@ -21,13 +21,17 @@ namespace Chat_Bot
             return user;
         }
 
-        public static User Entering(UserBase userBase)
+        public static User LogIn(UserBase userBase)
         {
             Clear();
-            WriteLine($"Для входа введи адрес электронной почты.");
-
             User user = new();
+
+            WriteLine($"Введи адрес электронной почты.");
             Validation.TryValidate(user, nameof(user.Mail));
+
+            Clear();
+            WriteLine($"Введи пароль.");
+            Validation.TryValidate(user, nameof(user.Password));
 
             user = userBase.GetItem(user);
 

@@ -38,11 +38,10 @@ namespace Chat_Bot
                 ReadKey();
                 return true;
             }
-            ReadKey();
             return false;
         }
 
-        internal bool PayOrder(User user)
+        internal bool PayOrder(UserMiddle user)
         {
             Clear();
 
@@ -51,7 +50,7 @@ namespace Chat_Bot
 
             if (CheckPayment(user.Money)) { return true; }
 
-            WriteLine($"{user.Name}, на твоем счету недостаточно средств");            
+            WriteLine($"{user.Name}, на твоем счету недостаточно средств");
 
             return false;
         }
@@ -69,20 +68,23 @@ namespace Chat_Bot
         public void GetInfo()
         {
             Clear();
+
             if (itemList.Count > 0)
             {
                 WriteLine("Твой последний заказ:");
-                foreach (var sushi in itemList) { sushi.Key.GetInfo(sushi.Value); }
+
+                foreach (var sushi in itemList)
+                { sushi.Key.GetInfo(sushi.Value); }
+
                 WriteLine($"Открыт {OpenDate}");
 
-                if (Closed) 
+                if (Closed)
                 {
                     WriteLine($"Закрыт {CloseDate}");
                     ReadKey();
                     return;
                 }
                 WriteLine($"Не закрыт");
-
                 WriteLine($"- Стоимость заказа: {Price} р");
             }
             WriteLine();

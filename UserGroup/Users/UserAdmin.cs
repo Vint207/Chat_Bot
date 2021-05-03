@@ -3,13 +3,13 @@ using static System.Console;
 
 namespace Chat_Bot
 {
-    public sealed class Admin : User
+    public sealed class UserAdmin : UserMiddle
     {
 
         public void FindUserInfo(UserBase userBase)
         {
             Clear();
-            User user = new();
+            UserMiddle user = new();
 
             WriteLine($"Введи адрес электронной почты:");
             Validation.TryValidate(user, nameof(user.Mail));
@@ -29,14 +29,14 @@ namespace Chat_Bot
         public void AllUsersInfo(UserBase userBase)
         {
             Clear();
-            userBase.GetAllItemsInfo(new User() { Name = "Администратор" });
+            userBase.GetAllItemsInfo(new UserMiddle() { Name = "Администратор" });
             ReadKey();
         }
 
         public void DeleteUser(UserBase userBase)
         {
             Clear();
-            User user = new();
+            UserMiddle user = new();
 
             WriteLine($"Введи адрес электронной почты:");
             Validation.TryValidate(user, nameof(user.Mail));
@@ -45,7 +45,7 @@ namespace Chat_Bot
             WriteLine($"Введи пароль:");
             Validation.TryValidate(user, nameof(user.Password));
 
-            if (userBase?.GetItem(user) is User tempUser)
+            if (userBase?.GetItem(user) is UserMiddle tempUser)
             {
                 WriteLine($"Пользователь {tempUser.Name} удален.");
                 userBase.DeleteItem(tempUser);

@@ -5,15 +5,14 @@ using System.Linq;
 
 namespace Chat_Bot
 {
-    public class OrderBase : ICRUD<Order, User>
+    public class OrderBase : ICRUD<Order, UserMiddle>
     {
         List<Order> _itemList;
-        public event BaseChangedEvent<Order, User> baseChangedEvent;
-        public BaseChangedMessage<Order, User> baseChangedMessage;
+        public event BaseChangedEvent<Order, UserMiddle> baseChangedEvent;
 
         public OrderBase() { _itemList = new(); }
 
-        public bool AddItem(Order order, User user)
+        public bool AddItem(Order order, UserMiddle user)
         {
             if (order != null)
             {
@@ -24,14 +23,14 @@ namespace Chat_Bot
             return false;
         }
 
-        public bool DeleteItem(Order order, User user)
+        public bool DeleteItem(Order order, UserMiddle user)
         {
             baseChangedEvent?.Invoke(order, user);
             _itemList.Remove(order);
             return true;
         }
 
-        public Order GetItem(Order order, User user)
+        public Order GetItem(Order order, UserMiddle user)
         {
             baseChangedEvent?.Invoke(order, user);
 
@@ -43,15 +42,15 @@ namespace Chat_Bot
             return null;
         }
 
-        public void AddOrder(User user)
+        public void AddOrder(UserMiddle user)
         {
             Console.Clear();
 
-            if (user.bin.itemList.Count > 0)
+            if (user.Bin.itemList.Count > 0)
             {
-                Order order = new() { Price = user.bin.Price };
+                Order order = new() { Price = user.Bin.Price };
 
-                foreach (var item in user.bin.itemList)
+                foreach (var item in user.Bin.itemList)
                 {
                     if (item.Value > 0)
                     { order.itemList.Add(item.Key, item.Value); }
@@ -59,7 +58,7 @@ namespace Chat_Bot
                 AddItem(order, user);
 
                 Console.WriteLine("Заказ сформирован");
-                user.bin.EmptyBin(user);
+                user.Bin.EmptyBin(user);
                 Console.ReadKey();
                 return;
             }

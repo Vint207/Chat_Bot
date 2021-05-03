@@ -1,15 +1,15 @@
 ﻿using Chat_Bot.Interfaces;
 using System;
 using System.Collections.Generic;
+using static System.Console;
 
 namespace Chat_Bot
 {
-    public class SushiBase : ICRUD<Sushi, Guest>
+    public class SushiBase : ICRUD<Sushi, UserMiddle>
     {
 
         public Dictionary<Sushi, int> itemList;
-        public event BaseChangedEvent<Sushi, Guest> baseChangedEvent;
-        public BaseChangedMessage<Sushi, Guest> baseChangedMessage;
+        public event BaseChangedEvent<Sushi, UserMiddle> baseChangedEvent;
 
         public SushiBase()
         {
@@ -25,10 +25,8 @@ namespace Chat_Bot
             };
         }
 
-        public bool AddItem(Sushi sushi, Guest user)
+        public bool AddItem(Sushi sushi, UserMiddle user)
         {
-            baseChangedMessage?.Invoke(sushi, user);
-
             foreach (var item in itemList)
             {
                 if (item.Key.Name.Equals(sushi?.Name))
@@ -46,10 +44,8 @@ namespace Chat_Bot
             return false;
         }
 
-        public bool DeleteItem(Sushi sushi, Guest user)
+        public bool DeleteItem(Sushi sushi, UserMiddle user)
         {
-            baseChangedMessage?.Invoke(sushi, user);
-
             foreach (var item in itemList)
             {
                 if (item.Key.Name.Equals(sushi?.Name))
@@ -62,10 +58,8 @@ namespace Chat_Bot
             return false;
         }
         
-        public Sushi GetItem(Sushi sushi, Guest user)
+        public Sushi GetItem(Sushi sushi, UserMiddle user)
         {
-            baseChangedMessage?.Invoke(sushi, user);
-
             foreach (var item in itemList)
             {
                 if (item.Key.Name.Equals(sushi?.Name))
@@ -74,14 +68,22 @@ namespace Chat_Bot
                     return item.Key;
                 }
             }
-            Console.WriteLine("Таких суши нет, попробуй другие");
+            WriteLine("Таких суши нет, попробуй другие");
             return null;
         }
 
-        public bool GetAllItemsInfo(Guest guest)
+        public virtual void GetAllItemsInfo(UserMiddle guest)
         {
-            baseChangedMessage?.Invoke(null, guest);
+            Clear();
+            WriteLine("Список суши:");
 
+            GetItemsInfo(guest);
+
+            ReadKey();
+        }
+
+        protected bool GetItemsInfo(UserMiddle guest)
+        {
             foreach (var item in itemList)
             {
                 if (item.Value > 0)
@@ -92,10 +94,8 @@ namespace Chat_Bot
             return true;
         }
 
-        public List<string> GetListItems(Guest guest)
+        public List<string> GetListItems(UserMiddle guest)
         {
-            baseChangedMessage?.Invoke(null, guest);
-
             List<string> sushiList = new();
 
             foreach (var item in itemList)

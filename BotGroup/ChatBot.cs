@@ -13,10 +13,8 @@ namespace Chat_Bot
         {
             _userBase = userBase;
             _sushiBase = sushiBase;
-            //_userBase.baseChangedMessage = EventMethods.UserBaseChangedMessage;
-            //_userBase.baseChangedEvent += EventMethods.UserBaseChanged;
-            //_sushiBase.baseChangedMessage = EventMethods.SushiBaseChangedMessage;
-            //_sushiBase.baseChangedEvent += EventMethods.SushiBaseChanged;
+            _userBase.baseChangedEvent += EventMethods.UserBaseChanged;
+            _sushiBase.baseChangedEvent += EventMethods.SushiBaseChanged;
         }
 
         public void MainMenu()
@@ -34,7 +32,7 @@ namespace Chat_Bot
                         UserMenu(Registration.LogInUser(_userBase));
                         break;
                     case "Вход-гость":
-                        GuestMenu(new User());
+                        GuestMenu(new());
                         break;
                     case "Вход-администратор":
                         AdminMenu(Registration.LogInAdmin(_userBase));
@@ -43,7 +41,7 @@ namespace Chat_Bot
             }
         }
 
-        void UserMenu(User user)
+        void UserMenu(UserMiddle user)
         {
             if (user == null) return;
 
@@ -63,9 +61,7 @@ namespace Chat_Bot
                         user.PutMoney();
                         break;
                     case "Меню-суши":
-                        Clear();
                         _sushiBase.GetAllItemsInfo(user);
-                        ReadKey();
                         break;
                     case "Меню-корзины":
                         BinMenu(user);
@@ -79,7 +75,7 @@ namespace Chat_Bot
             }
         }
 
-        void GuestMenu(Guest guest)
+        void GuestMenu(UserGuest guest)
         {
             if (guest == null) return;
 
@@ -90,9 +86,7 @@ namespace Chat_Bot
                 switch (ConsoleWork.Choose(new List<string>() { "Меню-суши", "Выйти" }))
                 {
                     case "Меню-суши":
-                        Clear();
-                        _sushiBase.GetAllItemsInfo(guest);
-                        ReadKey();
+                        _sushiBase.GetAllItemsInfo(new());
                         break;
                     case "Выйти":
                         return;
@@ -100,7 +94,7 @@ namespace Chat_Bot
             }
         }
 
-        void AdminMenu(Admin admin)
+        void AdminMenu(UserAdmin admin)
         {
             if (admin == null) return;
 
@@ -125,7 +119,7 @@ namespace Chat_Bot
             }
         }
 
-        void ProfileMenu(User user)
+        void ProfileMenu(UserMiddle user)
         {
             while (true)
             {
@@ -148,7 +142,7 @@ namespace Chat_Bot
             }
         }
 
-        void BinMenu(User user)
+        void BinMenu(UserMiddle user)
         {
             while (true)
             {
@@ -157,13 +151,13 @@ namespace Chat_Bot
                 switch (ConsoleWork.Choose(new List<string>() { "Просмотеть-корзину", "Добавить-суши", "Удалить-суши", "Назад" }))
                 {
                     case "Просмотеть-корзину":
-                        user.bin.GetAllItemsFromBin(user);
+                        user.Bin.GetAllItemsInfo(user);
                         break;
                     case "Добавить-суши":
-                        user.bin.AddItemToBin(_sushiBase, user);
+                        user.Bin.AddItemToBin(_sushiBase, user);
                         break;
                     case "Удалить-суши":
-                        user.bin.DeleteItemFromBin(_sushiBase, user);
+                        user.Bin.DeleteItemFromBin(_sushiBase, user);
                         break;
                     case "Назад":
                         return;
@@ -171,7 +165,7 @@ namespace Chat_Bot
             }
         }
 
-        void OrderMenu(User user)
+        void OrderMenu(UserMiddle user)
         {
             while (true)
             {
@@ -180,10 +174,10 @@ namespace Chat_Bot
                 switch (ConsoleWork.Choose(new List<string>() { "Сформировать-заказ", "Просмотреть-заказ", "Оплатить-заказ", "Назад" }))
                 {
                     case "Сформировать-заказ":
-                        user.orderBase.AddOrder(user);
+                        user.OrderBase.AddOrder(user);
                         break;
                     case "Просмотреть-заказ":
-                        user.orderBase?.GetLastOrder()?.GetInfo();
+                        user.OrderBase?.GetLastOrder()?.GetInfo();
                         break;
                     case "Оплатить-заказ":
                         user.PayOrder();

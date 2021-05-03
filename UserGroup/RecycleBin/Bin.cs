@@ -10,7 +10,7 @@ namespace Chat_Bot
 
         public Bin() { itemList = new(); }
 
-        public void AddItemToBin(SushiBase sushiBase, User user)
+        public void AddItemToBin(SushiBase sushiBase, UserMiddle user)
         {
             while (true)
             {
@@ -26,16 +26,17 @@ namespace Chat_Bot
                 Price += sushi.Price;
 
                 WriteLine();
-                user.bin.GetAllItemsFromBin(user);
+                user.Bin.GetAllItemsInfo(user);
 
                 WriteLine();
                 WriteLine($"{user.Name}, хочешь заказать еще суши?");
 
-                if (!ConsoleWork.Choose()) { break; }
+                if (!ConsoleWork.Choose()) 
+                { break; }
             }
         }
 
-        public void DeleteItemFromBin(SushiBase sushiBase, User user)
+        public void DeleteItemFromBin(SushiBase sushiBase, UserMiddle user)
         {
             while (BinIsNotEmpty())
             {
@@ -51,12 +52,13 @@ namespace Chat_Bot
                 Price -= sushi.Price;
 
                 WriteLine();
-                user.bin.GetAllItemsFromBin(user);
+                user.Bin.GetAllItemsInfo(user);
 
                 WriteLine();
                 WriteLine($"{user.Name}, хочешь удалить еще суши?");
 
-                if (!ConsoleWork.Choose()) { return; }
+                if (!ConsoleWork.Choose()) 
+                { return; }
             }
             Clear();
             WriteLine($"Корзина пуста.");
@@ -73,22 +75,23 @@ namespace Chat_Bot
             }
         }
 
-        public void GetAllItemsFromBin(User user)
-        {
-            Clear();
-            WriteLine($"Состав корзины:");
-            GetAllItemsInfo(user);
-
-            WriteLine();
-            WriteLine($"- Стоимость товаров в корзине: {Price} р");
-            ReadKey();
-        }
-
-        public void EmptyBin(User user)
+        public void EmptyBin(UserMiddle user)
         {
             Price = 0d;
             itemList.Clear();
             WriteLine($"Корзина очищена");
+            ReadKey();
+        }
+
+        public override void GetAllItemsInfo(UserMiddle guest)
+        {
+            Clear();
+            WriteLine("Список суши в корзине:");
+
+            GetItemsInfo(guest);
+
+            WriteLine();
+            WriteLine($"- Стоимость товаров в корзине: {Price} р");
             ReadKey();
         }
 

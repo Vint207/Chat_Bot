@@ -4,16 +4,14 @@ using System.Collections.Generic;
 
 namespace Chat_Bot
 {
-    public class UserBase : ICRUD<User>
+    public class UserBase : ICRUD<UserMiddle>
     {
 
-        List<User> _itemList = new() { new() { Name = "Admin", Password = "admin01", Mail = "admin@mail.com" } };
-        public event BaseChangedEvent<User> baseChangedEvent;
-        public BaseChangedMessage<User> baseChangedMessage;
+        List<UserMiddle> _itemList = new() { new() { Name = "Admin", Password = "admin01", Mail = "admin@mail.com" } };
+        public event BaseChangedEvent<UserMiddle> baseChangedEvent;
 
-        public bool AddItem(User user)
+        public bool AddItem(UserMiddle user)
         {
-            baseChangedMessage?.Invoke(user);
             if (user != null)
             {
                 _itemList.Add(user);
@@ -23,10 +21,8 @@ namespace Chat_Bot
             return false;
         }
 
-        public bool DeleteItem(User user)
+        public bool DeleteItem(UserMiddle user)
         {
-            baseChangedMessage?.Invoke(user);
-
             user = _itemList.Find(item => item.Mail == user.Mail && item.Password == user.Password);
 
             if (user != null)
@@ -38,10 +34,8 @@ namespace Chat_Bot
             return false;
         }
 
-        public User GetItem(User user)
+        public UserMiddle GetItem(UserMiddle user)
         {
-            baseChangedMessage?.Invoke(user);
-
             user = _itemList.Find(item => item.Mail == user.Mail && item.Password == user.Password);
 
             if (user != null)
@@ -49,14 +43,11 @@ namespace Chat_Bot
                 baseChangedEvent?.Invoke(user);
                 return user;
             }
-            Console.WriteLine("Данный пользователь не зарегистрирован.");
-            return user;
+            return null;
         }
 
-        public bool GetAllItemsInfo(User user)
+        public bool GetAllItemsInfo(UserMiddle user)
         {
-            baseChangedMessage?.Invoke(user);
-
             foreach (var item in _itemList) 
             { item.GetInfo(); }
 

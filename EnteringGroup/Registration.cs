@@ -6,7 +6,7 @@ namespace Chat_Bot
     class Registration
     {
 
-        public static Admin Registrate(UserBase userBase)
+        public static Admin RegistrateUser(UserBase userBase)
         {
             Admin user = new();
 
@@ -21,22 +21,32 @@ namespace Chat_Bot
             return user;
         }
 
-        public static User LogIn(UserBase userBase)
+        public static User LogInUser(UserBase userBase)
         {
             Clear();
             User user = new();
 
-            WriteLine($"Введи адрес электронной почты.");
+            WriteLine($"Введи адрес электронной почты:");
             Validation.TryValidate(user, nameof(user.Mail));
 
             Clear();
-            WriteLine($"Введи пароль.");
+            WriteLine($"Введи пароль:");
             Validation.TryValidate(user, nameof(user.Password));
 
             user = userBase.GetItem(user);
 
             ReadKey();
             return user;
+        }
+
+        public static Admin LogInAdmin(UserBase userBase)
+        {
+            if (LogInUser(userBase) is User user)
+            {
+                if (user.Mail == "admin@mail.com")
+                { return new() { Name = "Администратор" }; }              
+            }
+            return null;
         }
     }
 }

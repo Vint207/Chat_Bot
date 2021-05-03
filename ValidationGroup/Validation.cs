@@ -46,9 +46,9 @@ namespace Chat_Bot
                 catch (Exception ex)
                 {
                     Clear();
-                    WriteLine(ex.Message); 
-                };              
-                WriteLine("Попробуй еще раз.");
+                    WriteLine(ex.Message);
+                    WriteLine("Попробуй еще раз:");
+                };                              
             }
         }
     }

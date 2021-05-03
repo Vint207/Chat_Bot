@@ -9,7 +9,7 @@ namespace Chat_Bot
     public class Order
     {
 
-        public Dictionary<Sushi, int> itemList;
+        public Dictionary<Sushi, int> itemList = new();
         public double Price { get; set; }
         public bool Paid { get; set; }
         public bool Closed { get; set; }
@@ -28,7 +28,6 @@ namespace Chat_Bot
         internal bool CheckPayment(double money)
         {
             Clear();
-
             WriteLine($"Стоимость заказа {Price} р");
 
             if (money > 0 & Price <= money)

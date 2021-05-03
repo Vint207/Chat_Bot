@@ -18,22 +18,22 @@ namespace Chat_Bot
             //orderBase.baseChangedMessage = EventMethods.OrderBaseChangedMessage;
             //orderBase.baseChangedEvent += EventMethods.OrderBaseChanged;
         }
-
-        [Required]
-        [RegularExpression(@"^[a-z\|A-Z\|0-9]{6,12}$", ErrorMessage = "Некорректный формат пароля")]
+        
+        [Required (ErrorMessage = "Поле не может быть пустым. Введи новый пароль:")]
+        [RegularExpression(@"^[a-z\|A-Z\|0-9]{6,12}$", ErrorMessage = "Некорректный формат пароля. Введи новый пароль:")]
         public string Password { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле не может быть пустым. Введи новый адрес почты:")]
         [RegularExpression(@"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-         @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$", ErrorMessage = "Недопустимый адрес электронной почты")]
+         @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$", ErrorMessage = "Недопустимый адрес электронной почты. Введи новый адрес почты:")]
         public string Mail { get; set; }
 
-        [Required]
-        [Range(1, 999999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 999999 р")]
+        [Required(ErrorMessage = "Поле не может быть пустым. Введи сумму заново:")]
+        [Range(1, 999999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 999999 р. Введи сумму заново:")]
         public double Money { get; set; }
 
-        [Required]
-        [Range(1, 9999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 9999")]
+        [Required(ErrorMessage = "Поле не может быть пустым. Введи сумму заново:")]
+        [Range(1, 9999, ErrorMessage = "Сумма должна быть в диапазоне 1 - 9999. Введи сумму заново:")]
         public double LastTransaction { get; set; }
 
 
@@ -46,6 +46,7 @@ namespace Chat_Bot
             Validation.TryValidate(this, nameof(Name));
 
             WriteLine($"{Phrase("Greet")}, {Name}.");
+            ReadKey();
         }
 
         internal void ChangePassword()
@@ -57,6 +58,7 @@ namespace Chat_Bot
             Validation.TryValidate(this, nameof(Password));
 
             WriteLine($"Пароль {Password} {Phrase("Prove")}.");
+            ReadKey();
         }
 
         internal void ChangeMail(UserBase userBase)

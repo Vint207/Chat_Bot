@@ -13,10 +13,10 @@ namespace Chat_Bot
         {
             _userBase = userBase;
             _sushiBase = sushiBase;
-            _userBase.baseChangedMessage = EventMethods.UserBaseChangedMessage;
-            _userBase.baseChangedEvent += EventMethods.UserBaseChanged;
-            _sushiBase.baseChangedMessage = EventMethods.SushiBaseChangedMessage;
-            _sushiBase.baseChangedEvent += EventMethods.SushiBaseChanged;
+            //_userBase.baseChangedMessage = EventMethods.UserBaseChangedMessage;
+            //_userBase.baseChangedEvent += EventMethods.UserBaseChanged;
+            //_sushiBase.baseChangedMessage = EventMethods.SushiBaseChangedMessage;
+            //_sushiBase.baseChangedEvent += EventMethods.SushiBaseChanged;
         }
 
         public void MainMenu()
@@ -25,24 +25,19 @@ namespace Chat_Bot
             {
                 Clear();
 
-                switch (ConsoleWork.Choose(new List<string>() { "Регистрация", "Вход-пользователь", "Вход-гость" }))
+                switch (ConsoleWork.Choose(new List<string>() { "Регистрация", "Вход-пользователь", "Вход-гость", "Вход-администратор" }))
                 {
                     case "Регистрация":
-                        UserMenu(Registration.Registrate(_userBase));
+                        UserMenu(Registration.RegistrateUser(_userBase));
                         break;
                     case "Вход-пользователь":
-                        User user = new Admin();
-                        user = Registration.LogIn(_userBase);
-                        if (user != null)
-                        {
-                            if (user.Mail != "admin@mail.com")
-                            { UserMenu(user); }
-                            else
-                            { AdminMenu(new() { Name = "Администратор"}); }
-                        }
+                        UserMenu(Registration.LogInUser(_userBase));
                         break;
                     case "Вход-гость":
                         GuestMenu(new User());
+                        break;
+                    case "Вход-администратор":
+                        AdminMenu(Registration.LogInAdmin(_userBase));
                         break;
                 }
             }
@@ -50,6 +45,8 @@ namespace Chat_Bot
 
         void UserMenu(User user)
         {
+            if (user == null) return;
+
             while (true)
             {
                 Clear();
@@ -84,6 +81,8 @@ namespace Chat_Bot
 
         void GuestMenu(Guest guest)
         {
+            if (guest == null) return;
+
             while (true)
             {
                 Clear();
@@ -103,6 +102,8 @@ namespace Chat_Bot
 
         void AdminMenu(Admin admin)
         {
+            if (admin == null) return;
+
             while (true)
             {
                 Clear();
@@ -116,7 +117,7 @@ namespace Chat_Bot
                         admin.FindUserInfo(_userBase);
                         break;
                     case "Удалить-пользователя":
-                        admin.AllUsersInfo(_userBase);
+                        admin.DeleteUser(_userBase);
                         break;
                     case "Выйти":
                         return;

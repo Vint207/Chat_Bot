@@ -18,10 +18,7 @@ namespace Chat_Bot
             if (order != null)
             {
                 _itemList.Add(order);
-
-                Console.WriteLine();
                 baseChangedEvent?.Invoke(order, user);
-
                 return true;
             }
             return false;
@@ -30,9 +27,7 @@ namespace Chat_Bot
         public bool DeleteItem(Order order, User user)
         {
             baseChangedEvent?.Invoke(order, user);
-
             _itemList.Remove(order);
-
             return true;
         }
 
@@ -42,7 +37,8 @@ namespace Chat_Bot
 
             foreach (var item in _itemList)
             {
-                if (item.Id.Equals(order?.Id)) { return item; }
+                if (item.Id.Equals(order?.Id))
+                { return item; }
             }
             return null;
         }
@@ -53,8 +49,15 @@ namespace Chat_Bot
 
             if (user.bin.itemList.Count > 0)
             {
-                AddItem(new() { Price = user.bin.Price, itemList = new Dictionary<Sushi, int>(user.bin.itemList)}, user);
-                
+                Order order = new() { Price = user.bin.Price };
+
+                foreach (var item in user.bin.itemList)
+                {
+                    if (item.Value > 0)
+                    { order.itemList.Add(item.Key, item.Value); }
+                }
+                AddItem(order, user);
+
                 Console.WriteLine("Заказ сформирован");
                 user.bin.EmptyBin(user);
                 Console.ReadKey();
@@ -74,9 +77,7 @@ namespace Chat_Bot
                 Console.ReadKey();
                 return null;
             }
-
             Order order = _itemList?.Last();
-
             return order;
         }
     }

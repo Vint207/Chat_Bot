@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using static System.Console;
-
-namespace Chat_Bot
+﻿namespace Chat_Bot
 {
     class Program
     {
@@ -10,11 +7,7 @@ namespace Chat_Bot
             UserBase users = new();
             SushiBase sushi = new();
 
-            while (true)
-            {
-                new ChatBot(users, sushi).MainMenu();
-                ReadLine();
-            }
+            new ChatBot(users, sushi).MainMenu();
         }
     }
 }
